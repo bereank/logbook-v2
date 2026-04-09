@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Filament\Resources\LogbookProfiles\Tables;
 
 use App\Enums\LogBookStatusEnum;
@@ -39,21 +40,31 @@ class LogbookProfilesTable
                     ->label('SAP Doc Date')
                     ->visible(fn() => $isAdmin),
 
-                     TextColumn::make('CardCode')
+                TextColumn::make('CardCode')
                     ->label('Customer Code')
-                     ->visible(fn() => $isAdmin)
+                    ->visible(fn() => $isAdmin)
                     ->searchable(),
 
                 TextColumn::make('CustomerName')
                     ->label('Customer Name')
+                    ->visible(fn() => $isAdmin)
                     ->searchable(),
 
                 TextColumn::make('chasisNumber')
                     ->label('Chasis Number')
+                    ->copyable()
+                    ->badge()
+                    ->color('indigo')
                     ->searchable(),
+
+                
 
                 TextColumn::make('regNumber')
                     ->label('Reg Number'),
+
+                    
+                TextColumn::make('PinNo')
+                    ->label('PIN Number'),
 
                 TextColumn::make('isAvailable')
                     ->label('LB Av.')
@@ -92,14 +103,14 @@ class LogbookProfilesTable
                     ->toggleable(isToggledHiddenByDefault: true),
 
             ])
-            ->defaultSort('pendingRequestsCreatedOn', 'desc')
+            ->defaultSort('created_at', 'desc')
             ->filters([
                 SelectFilter::make('Status')
                     ->multiple()
                     ->options(LogBookStatusEnum::class)
                     ->default([
                         LogBookStatusEnum::PENDING->value,
-                        LogBookStatusEnum::DEFAULT ->value,
+                        LogBookStatusEnum::PROCESSING->value,
                         LogBookStatusEnum::PENDING_ACCEPTANCE->value,
                         LogBookStatusEnum::WITH_ISSUES->value,
                         LogBookStatusEnum::ACCEPTED->value,
@@ -110,8 +121,6 @@ class LogbookProfilesTable
                 ViewAction::make(),
                 EditAction::make(),
             ])
-            ->toolbarActions([
-
-            ]);
+            ->toolbarActions([]);
     }
 }

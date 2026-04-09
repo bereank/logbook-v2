@@ -36,7 +36,7 @@ class LogbookRequestsTable
                     ->label('Customer Name')
                     ->getStateUsing(
                         fn($record) =>
-                        $record->profile->CustomerName ?? $record->profile->NumAtCard
+                        $record->profile->CustomerName ?? $record->profile?->NumAtCard ?? 'N/A'
                     ),
 
 
@@ -44,7 +44,7 @@ class LogbookRequestsTable
                     ->label('Branch/Dealer')
                     ->getStateUsing(
                         fn($record) =>
-                        $record->profile?->logbookOwner?->name ?? $record->profile?->Location
+                        $record->profile?->logbookOwner?->name ?? $record->profile?->Location ?? 'N/A'
                     ),
 
                 TextColumn::make('chasisNumber')
@@ -91,17 +91,16 @@ class LogbookRequestsTable
                     ->multiple()
                     ->options(
                         collect(LogBookStatusEnum::cases())
+                            // ->whereIn('value', [LogBookStatusEnum::PROCESSING,  LogBookStatusEnum::PENDING_ACCEPTANCE, LogBookStatusEnum::WITH_ISSUES])
                             ->mapWithKeys(fn($case) => [
                                 $case->value => $case->label()
                             ])
                             ->toArray()
                     )
                     ->default([
-                        LogBookStatusEnum::PENDING->value,
-
-                        LogBookStatusEnum::PENDING_ACCEPTANCE->value,
-                        LogBookStatusEnum::WITH_ISSUES->value,
-
+                        LogBookStatusEnum::PROCESSING,
+                        LogBookStatusEnum::PENDING_ACCEPTANCE,
+                        LogBookStatusEnum::WITH_ISSUES,
                     ])
                     ->query(function ($query, array $data) {
                         if (!filled($data['values'])) {

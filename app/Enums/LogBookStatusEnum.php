@@ -4,8 +4,8 @@ namespace App\Enums;
 
 enum LogBookStatusEnum: string
 {
-    case DEFAULT = '1';
-    case PENDING = '2';
+    case PENDING = '1';
+    case PROCESSING = '2';
     case PENDING_ACCEPTANCE = '3';
     case WITH_ISSUES = '4';
     case ACCEPTED = '5';
@@ -16,7 +16,7 @@ enum LogBookStatusEnum: string
     {
         return match ($this) {
             self::PENDING => 'Pending',
-            self::DEFAULT => 'Pending',
+            self::PROCESSING => 'Requested',
             self::PENDING_ACCEPTANCE => 'P.Acceptance',
             self::WITH_ISSUES => 'With Issues',
             self::ACCEPTED => 'Accepted',
@@ -28,11 +28,11 @@ enum LogBookStatusEnum: string
     {
         return match ($this) {
             self::PENDING => 'warning',
-            self::DEFAULT => 'warning',
+            self::PROCESSING => 'indigo',
             self::PENDING_ACCEPTANCE => 'info',
             self::WITH_ISSUES => 'danger',
-            self::ACCEPTED => 'success',
-            self::DISPATCHED => 'primary',
+            self::ACCEPTED => 'primary',
+            self::DISPATCHED => 'success',
         };
     }
 
@@ -40,7 +40,7 @@ enum LogBookStatusEnum: string
     {
         return match ($this) {
             self::PENDING => 'heroicon-m-lock-open',
-            self::DEFAULT => 'heroicon-m-lock-open',
+            self::PROCESSING => 'heroicon-m-arrow-path-rounded-square',
             self::PENDING_ACCEPTANCE => 'heroicon-m-lock-closed',
             self::WITH_ISSUES => 'heroicon-m-lock-closed',
             self::ACCEPTED => 'heroicon-m-check-badge',

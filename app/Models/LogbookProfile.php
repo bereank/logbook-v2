@@ -16,15 +16,16 @@ class LogbookProfile extends Model
     protected $guarded = ['id'];
     protected $table = 'logbook_profiles';
 
-    // public function logbook(): BelongsTo
-    // {
-    //     return $this->belongsTo(Logbook::class, 'logbook_id');
-    // }
-
 
     protected static function booted()
     {
         static::addGlobalScope('excludeCashCustomer', function (Builder $builder) {
+
+
+            if (!auth()->user()?->hasAnyRole(['Financier'])) {
+                return;
+            }
+
 
             $excludedCardCodes = [
                 'C-SIA-C00015',
@@ -52,12 +53,36 @@ class LogbookProfile extends Model
                 'C-ELD-C00015',
                 'C-MAL-C00015',
                 'C-TRD-C00015',
-                'C-KUB-C00015'
+                'C-KUB-C00015',
+
+                'C-TRD-S000298',
+                'C-DIST-B00012',
+                'C-DIST-A00007'
             ];
 
             $builder->whereNotIn('CardCode', $excludedCardCodes);
         });
+
+        static::addGlobalScope('cleanChasis', function ($builder) {
+            $builder->where('chasisNumber', 'not like', '%.%');
+        });
+
+        static::addGlobalScope('onlyStatus', function ($builder) {
+            $builder->whereIn('status', [1, 2, 3, 4, 5, 6]);
+        });
+
+        static::addGlobalScope('onlyChasisLinkedToPin', function ($builder) {
+
+
+            if (!auth()->user()?->hasAnyRole(['Dealer', 'Customer'])) {
+                return;
+            }
+
+            $builder->where('PinNo', auth()->user()?->pin_no);
+        });
     }
+
+
 
     public function logbookLocation(): BelongsTo
     {
