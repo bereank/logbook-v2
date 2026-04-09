@@ -1,0 +1,38 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+
+class LogbookRequest extends Model
+{
+    use HasFactory;
+
+    protected $guarded = ['id'];
+    protected $table = 'logbook_requests';
+
+    public function user() : BelongsTo
+    {
+        return $this->belongsTo(User::class, 'createdBy','id');    
+    }
+
+    public function logbook() : BelongsTo
+    {
+        return $this->belongsTo(Logbook::class, 'logbook_id','id');    
+    }
+
+     public function profile() : BelongsTo
+    {
+        return $this->belongsTo(LogbookProfile::class, 'chasisNumber','chasisNumber');    
+    }
+
+
+
+    public function logbook_issues() : BelongsTo
+    {
+        return $this->belongsTo(LogbookIssues::class, 'id','requesterId');    
+    }
+
+}
