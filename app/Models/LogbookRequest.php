@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Builder;
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -25,10 +25,6 @@ class LogbookRequest extends Model
         return $this->belongsTo(User::class, 'createdBy', 'id');
     }
 
-    public function logbook(): BelongsTo
-    {
-        return $this->belongsTo(Logbook::class, 'logbook_id', 'id');
-    }
 
     public function logbook_issues(): BelongsTo
     {
