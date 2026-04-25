@@ -3,6 +3,8 @@
 namespace App\Filament\Resources\LogbookProfiles\Tables;
 
 use App\Enums\LogBookStatusEnum;
+use App\Filament\Resources\LogbookProfiles\LogbookProfileResource;
+use Filament\Actions\Action;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
@@ -47,6 +49,7 @@ class LogbookProfilesTable
 
                 TextColumn::make('CustomerName')
                     ->label('Customer Name')
+                    ->wrap()
                     ->visible(fn() => $isAdmin)
                     ->searchable(),
 
@@ -57,13 +60,14 @@ class LogbookProfilesTable
                     ->color('indigo')
                     ->searchable(),
 
-                
+
 
                 TextColumn::make('regNumber')
                     ->label('Reg Number'),
 
-                    
+
                 TextColumn::make('PinNo')
+                   ->visible(fn() => $isAdmin)
                     ->label('PIN Number'),
 
                 TextColumn::make('isAvailable')
@@ -90,8 +94,9 @@ class LogbookProfilesTable
 
                 TextColumn::make('LogBookFee')
                     ->numeric(decimalPlaces: 2)
+                    ->tooltip(fn($state) => "Logbook fee is $state")
                     ->alignRight()
-                    ->label('Logbook Fee'),
+                    ->label('L.Fee'),
 
                 TextColumn::make('created_at')
                     ->dateTime()
@@ -118,8 +123,11 @@ class LogbookProfilesTable
                     ->label('Logbook Status'),
             ])
             ->recordActions([
-                ViewAction::make(),
-                EditAction::make(),
+
+                Action::make('Transfer')
+                    ->openUrlInNewTab()
+                    ->url(fn($record) => LogbookProfileResource::getUrl('info', ['record' => $record]))
+                    ->icon('heroicon-m-paper-airplane'),
             ])
             ->toolbarActions([]);
     }

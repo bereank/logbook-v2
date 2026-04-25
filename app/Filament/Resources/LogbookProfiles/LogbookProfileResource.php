@@ -5,17 +5,18 @@ namespace App\Filament\Resources\LogbookProfiles;
 use App\Filament\Resources\LogbookProfiles\Pages\CreateLogbookProfile;
 use App\Filament\Resources\LogbookProfiles\Pages\EditLogbookProfile;
 use App\Filament\Resources\LogbookProfiles\Pages\ListLogbookProfiles;
+use App\Filament\Resources\LogbookProfiles\Pages\LogbookInfo;
 use App\Filament\Resources\LogbookProfiles\Pages\ViewLogbookProfile;
 use App\Filament\Resources\LogbookProfiles\Schemas\LogbookProfileForm;
 use App\Filament\Resources\LogbookProfiles\Schemas\LogbookProfileInfolist;
 use App\Filament\Resources\LogbookProfiles\Tables\LogbookProfilesTable;
 use App\Models\LogbookProfile;
 use BackedEnum;
-use UnitEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use UnitEnum;
 
 class LogbookProfileResource extends Resource
 {
@@ -65,6 +66,7 @@ class LogbookProfileResource extends Resource
             'create' => CreateLogbookProfile::route('/create'),
             'view' => ViewLogbookProfile::route('/{record}'),
             'edit' => EditLogbookProfile::route('/{record}/edit'),
+            'info' => LogbookInfo::route('/{record}/info'),
         ];
     }
 }

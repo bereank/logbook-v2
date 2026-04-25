@@ -62,7 +62,7 @@ class LogbookRequestResource extends Resource
             'create' => CreateLogbookRequest::route('/create'),
             'view' => ViewLogbookRequest::route('/{record}'),
             'edit' => EditLogbookRequest::route('/{record}/edit'),
-            'transfer-request' => TransferRequest::route('/{record}/transfer-request'),
+  
         ];
     }
 }

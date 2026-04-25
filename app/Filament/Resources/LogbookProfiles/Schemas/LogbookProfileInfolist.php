@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\LogbookProfiles\Schemas;
 
-use Filament\Infolists\Components\TextEntry;
+
 use Filament\Schemas\Schema;
 
 class LogbookProfileInfolist
