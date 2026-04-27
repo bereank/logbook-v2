@@ -65,7 +65,6 @@ class LogbookProfileResource extends Resource
             'index' => ListLogbookProfiles::route('/'),
             'create' => CreateLogbookProfile::route('/create'),
             'view' => ViewLogbookProfile::route('/{record}'),
-            'edit' => EditLogbookProfile::route('/{record}/edit'),
             'info' => LogbookInfo::route('/{record}/info'),
         ];
     }

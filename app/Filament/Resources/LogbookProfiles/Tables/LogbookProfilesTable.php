@@ -5,12 +5,10 @@ namespace App\Filament\Resources\LogbookProfiles\Tables;
 use App\Enums\LogBookStatusEnum;
 use App\Filament\Resources\LogbookProfiles\LogbookProfileResource;
 use Filament\Actions\Action;
-use Filament\Actions\EditAction;
-use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
-use Illuminate\Container\Attributes\Log;
+
 
 class LogbookProfilesTable
 {
@@ -32,6 +30,7 @@ class LogbookProfilesTable
                     ->color(
                         fn($state) => LogBookStatusEnum::from($state)->color()
                     ),
+
 
 
 
@@ -126,6 +125,7 @@ class LogbookProfilesTable
 
                 Action::make('Transfer')
                     ->openUrlInNewTab()
+                    ->visible(fn($record) => (int )$record->status == LogBookStatusEnum::PENDING->value)
                     ->url(fn($record) => LogbookProfileResource::getUrl('info', ['record' => $record]))
                     ->icon('heroicon-m-paper-airplane'),
             ])

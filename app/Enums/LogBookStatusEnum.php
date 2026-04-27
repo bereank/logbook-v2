@@ -11,6 +11,7 @@ enum LogBookStatusEnum: string
     case ACCEPTED = '5';
 
     case DISPATCHED = '6';
+    case DIRECT_REGISTRATION = '7';
 
     public function label(): string
     {
@@ -20,7 +21,8 @@ enum LogBookStatusEnum: string
             self::PENDING_ACCEPTANCE => 'P.Acceptance',
             self::WITH_ISSUES => 'With Issues',
             self::ACCEPTED => 'Accepted',
-            self::DISPATCHED => 'Dispatched'
+            self::DISPATCHED => 'Dispatched',
+            self::DIRECT_REGISTRATION => 'Direct Registration',
         };
     }
 
@@ -33,6 +35,7 @@ enum LogBookStatusEnum: string
             self::WITH_ISSUES => 'danger',
             self::ACCEPTED => 'primary',
             self::DISPATCHED => 'success',
+            self::DIRECT_REGISTRATION => 'success',
         };
     }
 
@@ -45,6 +48,7 @@ enum LogBookStatusEnum: string
             self::WITH_ISSUES => 'heroicon-m-lock-closed',
             self::ACCEPTED => 'heroicon-m-check-badge',
             self::DISPATCHED => 'heroicon-m-truck',
+            self::DIRECT_REGISTRATION => 'heroicon-m-truck',
         };
     }
 }

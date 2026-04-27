@@ -15,11 +15,15 @@ class LogbookRequestsTable
 {
     public static function configure(Table $table): Table
     {
+
+        $isAdmin = auth()->user()?->hasAnyRole(['SuperAdmin', 'Admin']);
+        $isOfficer = auth()->user()?->hasAnyRole(['SuperAdmin', 'Admin', 'RegOfficer']);
         return $table
             ->columns([
 
                 TextColumn::make('profile.DocDate')
                     ->date('Y-m-d')
+                    ->visible(fn() => $isAdmin)
                     ->label('Doc Date'),
 
 
@@ -62,18 +66,29 @@ class LogbookRequestsTable
                     ->tooltip(fn($state) => $state ? 'Logbook is available' : 'Logbook is not available')
                     ->badge()
                     ->formatStateUsing(fn($state) => $state ? 'Yes' : 'No')
+                    ->toggleable(isToggledHiddenByDefault: false)
                     ->color(fn($state) => $state ? 'success' : 'warning'),
 
-
-                TextColumn::make('profile.status')
-                    ->label('Status')
-                    ->badge()
-                    ->formatStateUsing(
-                        fn($state) => LogBookStatusEnum::from($state)->label()
+                TextColumn::make('branch_display')
+                    ->label('Branch/Dealer')
+                    ->getStateUsing(
+                        fn($record) =>
+                        $record->profile?->logbookOwner?->name ?? $record->profile?->Location ?? 'N/A'
                     )
-                    ->color(
-                        fn($state) => LogBookStatusEnum::from($state)->color()
-                    ),
+                     ->toggleable(isToggledHiddenByDefault: false)
+                    ->visible(fn() => $isAdmin),
+
+                TextColumn::make('sap_location')
+                    ->label('SAP Location')
+                    ->getStateUsing(
+                        fn($record) => $record->profile?->Location ?? 'N/A'
+                    )
+                    ->toggleable(isToggledHiddenByDefault: false)
+                    ->visible(fn() => $isAdmin),
+                TextColumn::make('createdOn')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('created_at')
                     ->dateTime()
@@ -85,6 +100,7 @@ class LogbookRequestsTable
                     ->toggleable(isToggledHiddenByDefault: true),
 
             ])
+            ->defaultSort('createdOn', 'desc')
             ->filters([
                 SelectFilter::make('profile_status')
                     ->label('Logbook Status')
