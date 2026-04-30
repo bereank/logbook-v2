@@ -55,6 +55,8 @@ class LogbookProfile extends Model
                 'C-TRD-C00015',
                 'C-KUB-C00015',
 
+                
+
                 'C-TRD-S000298',
                 'C-DIST-B00012',
                 'C-DIST-A00007'
