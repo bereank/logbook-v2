@@ -125,7 +125,7 @@ class LogbookProfilesTable
 
                 Action::make('Transfer')
                     ->openUrlInNewTab()
-                    ->visible(fn($record) => (int )$record->status == LogBookStatusEnum::PENDING->value)
+                    ->visible(fn($record) => (int )$record->status == LogBookStatusEnum::PENDING->value && $record->regNumber)
                     ->url(fn($record) => LogbookProfileResource::getUrl('info', ['record' => $record]))
                     ->icon('heroicon-m-paper-airplane'),
             ])

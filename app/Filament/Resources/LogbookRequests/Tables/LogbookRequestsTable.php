@@ -75,7 +75,7 @@ class LogbookRequestsTable
                         fn($record) =>
                         $record->profile?->logbookOwner?->name ?? $record->profile?->Location ?? 'N/A'
                     )
-                     ->toggleable(isToggledHiddenByDefault: false)
+                    ->toggleable(isToggledHiddenByDefault: false)
                     ->visible(fn() => $isAdmin),
 
                 TextColumn::make('sap_location')
@@ -134,7 +134,7 @@ class LogbookRequestsTable
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+
                 ]),
             ]);
     }
