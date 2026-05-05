@@ -87,7 +87,7 @@ class BulkRequest extends Page implements HasTable
                         ->directory('bulk-uploads')
                         ->preserveFilenames(),
                 ])
-                ->action(function (Action $action, array $data) {
+                ->action(function (array $data) {
 
                 
 
@@ -109,7 +109,6 @@ class BulkRequest extends Page implements HasTable
                             ->success()
                             ->send();
 
-                        $action->success();
                     } catch (\Throwable $th) {
                         Log::info("Error uploading file: " . $th->getMessage());
                         Notification::make()
