@@ -32,6 +32,8 @@ class LogbookRequestResource extends Resource
 
     protected static ?string $modelLabel = 'Transfer Requests';
 
+     protected static ?int $navigationSort = 2;
+
 
     public static function form(Schema $schema): Schema
     {

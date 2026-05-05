@@ -32,7 +32,7 @@ class LogbookProfileResource extends Resource
     protected static ?string $modelLabel = 'Logbooks';
 
 
-
+ protected static ?int $navigationSort = 1;
 
 
 
