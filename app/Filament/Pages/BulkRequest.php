@@ -94,13 +94,16 @@ class BulkRequest extends Page implements HasTable
                     $filePath = $data['file'];
 
                     try {
-                        UploadProcessLog::create([
+                     $data = UploadProcessLog::create([
                             'name'      => "Request Upload",
-                            'file_path' => $filePath,
+                            'file_name' => $filePath,
                             'user_id'   => auth()->id(),
                             'status'    => 1, // Processing
+                            'createdOn' => now(),
+                            'createdBy' => auth()->id(),
                         ]);
 
+  
                         Notification::make()
                             ->title('Upload started successfully')
                             ->success()
