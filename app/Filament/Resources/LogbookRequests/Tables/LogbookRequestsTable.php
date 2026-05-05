@@ -130,7 +130,7 @@ class LogbookRequestsTable
             ])
             ->recordActions([
                 ViewAction::make(),
-                EditAction::make(),
+                EditAction::make()->hidden(fn ($record) => $record->isClosed),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
