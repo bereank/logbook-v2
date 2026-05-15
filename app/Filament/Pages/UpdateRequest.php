@@ -3,6 +3,7 @@ namespace App\Filament\Pages;
 
 use App\Actions\LogbookActions\GetChasisInfoAction;
 use App\Actions\LogbookActions\UpdateLogbookInfoAction;
+use App\Enums\UploadProcessTypeEnum;
 use App\Models\UploadProcessLog;
 use App\Models\User;
 use BackedEnum;
@@ -28,7 +29,7 @@ class UpdateRequest extends Page implements HasTable
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::Pencil;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Logbook Management';
+ protected static string|UnitEnum|null $navigationGroup = 'Bulk Operations';
 
     protected static ?int $navigationSort = 4;
 
@@ -107,7 +108,7 @@ class UpdateRequest extends Page implements HasTable
                             'user_id' => auth()->id(),
                             'status' => 0,
                             'createdOn' => now(),
-                            'process_type' => 1,
+                            'process_type' => UploadProcessTypeEnum::UPDATE_REQUEST->value,
                             'createdBy' => auth()->id(),
                         ]);
 
@@ -123,9 +124,9 @@ class UpdateRequest extends Page implements HasTable
                             return;
                         }
 
-                        
+
                         Log::info("Logbook info retrieved: " . json_encode($logbookInfo));
-    
+
                         (new UpdateLogbookInfoAction($logbookInfo))->handle();
 
                         Notification::make()
@@ -138,8 +139,8 @@ class UpdateRequest extends Page implements HasTable
                             'status' => 1,
                         ]);
 
-                        
-                
+
+
                         Notification::make()
                             ->title('Upload started successfully')
                             ->success()
@@ -157,7 +158,7 @@ class UpdateRequest extends Page implements HasTable
                     }
 
                 })
-                ->modalHeading('Upload Bulk File')
+                ->modalHeading('Upload Update Request File')
                 ->modalSubmitActionLabel('Add Request')
                 ->modalWidth('lg'),
         ];
@@ -167,12 +168,12 @@ class UpdateRequest extends Page implements HasTable
     {
 
         if (auth()->user()?->hasAnyRole(['SuperAdmin'])) {
-            return UploadProcessLog::query()->where('process_type', 10);
+            return UploadProcessLog::query()->where('process_type', UploadProcessTypeEnum::UPDATE_REQUEST->value);
         }
 
         return UploadProcessLog::query()
             ->where('user_id', auth()->user()->id)
-            ->where('process_type', 10);
+            ->where('process_type', UploadProcessTypeEnum::UPDATE_REQUEST->value);
     }
 
 }

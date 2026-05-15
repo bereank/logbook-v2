@@ -4,7 +4,7 @@ namespace App\Filament\Pages;
 use App\Actions\LogbookActions\GetChasisInfoAction;
 use App\Actions\LogbookActions\UpdateLogbookInfoAction;
 use App\Enums\UploadProcessTypeEnum;
-use App\Exports\TemplateExports\LogbooksPendingRequestTemplateExport;
+use App\Exports\TemplateExports\DispatchedLogbooksTemplateExport;
 use App\Models\UploadProcessLog;
 use App\Models\User;
 use BackedEnum;
@@ -23,17 +23,19 @@ use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 use UnitEnum;
 
-class DirectTransfer extends Page implements HasTable
+class Dispatch extends Page implements HasTable
 {
 
     use InteractsWithTable;
-    protected string $view = 'filament.pages.direct-transfer';
+    protected string $view = 'filament.pages.dispatches';
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::ArrowRight;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::Pencil;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Bulk Operations';
+    protected static ?string $navigationLabel = 'Dispatches Upload';
 
-    protected static ?int $navigationSort = 5;
+  protected static string|UnitEnum|null $navigationGroup = 'Bulk Operations';
+
+    protected static ?int $navigationSort = 4;
 
     public function table(Table $table): Table
     {
@@ -82,28 +84,22 @@ class DirectTransfer extends Page implements HasTable
     {
         return [
 
-
-          Action::make('download')
+         Action::make('download')
             ->label('Download Template')
             ->icon('heroicon-o-arrow-down-tray')
             ->tooltip('Download hatching summary')
             ->action(function () {
 
                 return Excel::download(
-                    new LogbooksPendingRequestTemplateExport([[
-                        'chasis_number' => '',
-                        'reg_number' => '',
-                        'status' => '',
-                    ]]),
-                    'Direct Transfer Template.xlsx'
+                    new DispatchedLogbooksTemplateExport(),
+                    now()->format('Y-m-d_H-i-s').'Dispatched Logbooks Template.xlsx'
                 );
 
             }),
 
 
-
             Action::make('Add New Request')
-                ->label('Upload Direct Transfer')
+                ->label('Upload Dispatch')
                 ->icon('heroicon-o-arrow-up-tray')
                 ->form([
 
@@ -131,7 +127,7 @@ class DirectTransfer extends Page implements HasTable
                             'user_id' => auth()->id(),
                             'status' => 0,
                             'createdOn' => now(),
-                            'process_type' => UploadProcessTypeEnum::DIRECT_TRANSFER_UPLOAD->value,
+                            'process_type' => UploadProcessTypeEnum::DISPATCHED->value,
                             'createdBy' => auth()->id(),
                         ]);
 
@@ -181,7 +177,7 @@ class DirectTransfer extends Page implements HasTable
                     }
 
                 })
-                ->modalHeading('Upload Direct Transfer File')
+                ->modalHeading('Upload Bulk File')
                 ->modalSubmitActionLabel('Add Request')
                 ->modalWidth('lg'),
         ];
@@ -191,16 +187,15 @@ class DirectTransfer extends Page implements HasTable
     {
 
         if (auth()->user()?->hasAnyRole(['SuperAdmin'])) {
-            return UploadProcessLog::query()->where('process_type', UploadProcessTypeEnum::DIRECT_TRANSFER_UPLOAD->value);
+            return UploadProcessLog::query()->where('process_type', UploadProcessTypeEnum::DISPATCHED->value);
         }
 
         return UploadProcessLog::query()
             ->where('user_id', auth()->user()->id)
-            ->where('process_type', UploadProcessTypeEnum::DIRECT_TRANSFER_UPLOAD->value);
+            ->where('process_type', UploadProcessTypeEnum::DISPATCHED->value);
     }
 
-    
-       public static function canViewAny(): bool
+    public static function canViewAny(): bool
     {
         return auth()->user()->hasRole('SuperAdmin');
     }

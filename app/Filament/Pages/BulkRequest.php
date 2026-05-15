@@ -1,6 +1,7 @@
 <?php
 namespace App\Filament\Pages;
 
+use App\Enums\UploadProcessTypeEnum;
 use App\Models\UploadProcessLog;
 use App\Models\User;
 use BackedEnum;
@@ -26,7 +27,7 @@ class BulkRequest extends Page implements HasTable
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::ArrowUpTray;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Logbook Management';
+    protected static string|UnitEnum|null $navigationGroup = 'Bulk Operations';
 
     protected static ?int $navigationSort = 3;
 
@@ -106,11 +107,12 @@ class BulkRequest extends Page implements HasTable
 
                     try {
                         $data = UploadProcessLog::create([
-                            'name'      => "Request Upload",
+                            'name' => "Request Upload",
                             'file_name' => $filePath,
-                            'user_id'   => auth()->id(),
-                            'status'    => 1, // Processing
+                            'user_id' => auth()->id(),
+                            'status' => 1, // Processing
                             'createdOn' => now(),
+                            'process_type' => UploadProcessTypeEnum::BULK_UPLOAD_REQUEST->value,
                             'createdBy' => auth()->id(),
                         ]);
 
@@ -140,12 +142,12 @@ class BulkRequest extends Page implements HasTable
     {
 
         if (auth()->user()?->hasAnyRole(['SuperAdmin'])) {
-            return UploadProcessLog::query()->where('process_type', 0);
+            return UploadProcessLog::query()->where('process_type', UploadProcessTypeEnum::BULK_UPLOAD_REQUEST->value);
         }
 
         return UploadProcessLog::query()
             ->where('user_id', auth()->user()->id)
-            ->where('process_type', 0);
+            ->where('process_type', UploadProcessTypeEnum::BULK_UPLOAD_REQUEST->value);
     }
 
 }
