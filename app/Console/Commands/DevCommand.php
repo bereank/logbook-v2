@@ -4,12 +4,17 @@ namespace App\Console\Commands;
 
 use App\Actions\LogbookActions\GetChasisInfoAction;
 use App\Actions\LogbookActions\ProcessFailedAllocationsAction;
+use App\Enums\LogBookStatusEnum;
+use App\Exports\PendingAcceptanceNotificationExport;
+use App\Mail\PendingAcceptanceNotificationMail;
 use App\Models\LogbookProfile;
 use App\Models\UploadedDataLog;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use Maatwebsite\Excel\Facades\Excel;
 
 
 #[Signature('app:dev-command')]
@@ -22,6 +27,23 @@ class DevCommand extends Command
     public function handle()
     {
 
+
+
+
+        Mail::to('kenneth.kibet@cargen.com')
+            ->send(new PendingAcceptanceNotificationMail(LogBookStatusEnum::PENDING_ACCEPTANCE));
+
+                    dd('Exported successfully');
+
+        $this->info('Daily Beyond Cap Report Notification Sent  . Date: ' . $date);
+
+        $date = now()->format('Y-m-d');
+
+        $fileName = "beyond_cap_report_{$date}.xlsx";
+        Excel::store(new PendingAcceptanceNotificationExport(LogBookStatusEnum::PENDING_ACCEPTANCE), $fileName);
+
+
+        dd('Exported successfully');
         //     $existinglb = LogbookProfile::withoutGlobalScopes()
         //     ->whereNotNull('DocNum')
         //     ->whereNull('status')
@@ -56,9 +78,9 @@ class DevCommand extends Command
                     Log::info('Chasis info not found for: ' . $chasis);
                     continue;
                 }
-            
+
                 (new ProcessFailedAllocationsAction($chasis))->handle();
-              
+
 
             } catch (\Exception $e) {
                 Log::error('Error processing chasis: ' . $chasis . ' Error: ' . $e->getMessage());
