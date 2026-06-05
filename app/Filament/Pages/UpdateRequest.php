@@ -29,14 +29,14 @@ class UpdateRequest extends Page implements HasTable
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::Pencil;
 
- protected static string|UnitEnum|null $navigationGroup = 'Bulk Operations';
+ protected static string|UnitEnum|null $navigationGroup = 'Logbook Management';
 
     protected static ?int $navigationSort = 4;
 
     public function table(Table $table): Table
     {
         return $table
-            ->query($this->getBaseQuery()) // your model here
+            ->query($this->getBaseQuery())
             ->columns([
                 TextColumn::make('creator.name')
                     ->label('Requested By')
@@ -50,17 +50,17 @@ class UpdateRequest extends Page implements HasTable
                     ->label('Status')
                     ->badge()
                     ->icon(fn(string $state): string => match ($state) {
-                        '0' => 'heroicon-m-x-mark',
-                        '1' => 'heroicon-m-check',
+                        '1' => 'heroicon-m-x-mark',
+                        '0' => 'heroicon-m-check',
 
                     })
                     ->formatStateUsing(fn(string $state): mixed => match ($state) {
-                        '0' => 'Processing',
-                        '1' => 'Processed',
+                        '1' => 'Processing',
+                        '0' => 'Processed',
                     })
                     ->color(fn(string $state): string => match ($state) {
-                        '0' => 'danger',
-                        '1' => 'success',
+                        '1' => 'danger',
+                        '0' => 'success',
                     }),
 
             ])

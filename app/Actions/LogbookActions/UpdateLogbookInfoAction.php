@@ -3,9 +3,9 @@
 namespace App\Actions\LogbookActions;
 
 use App\Actions\LogbookActions\ProcessFailedAllocationsAction;
+use App\Actions\LogbookActions\UpdateLogbookProfileStatusAction;
 use App\Models\Logbook;
 use App\Models\LogbookProfile;
-use App\Models\UploadedDataLog;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 
@@ -22,10 +22,10 @@ class UpdateLogbookInfoAction
         $logbook = $this->logbook;
 
 
-        $existinglb = LogbookProfile::where('chasisNumber', $logbook['DistNumber'])->first();
+        $logbookProfile = LogbookProfile::where('chasisNumber', $logbook['DistNumber'])->first();
 
 
-        if (!$existinglb) {
+        if (!$logbookProfile) {
 
             Log::info('DistNumber: ' . $logbook['DistNumber'] . ' - No existing logbook profile found. Creating new logbook and profile.');
 
@@ -34,7 +34,6 @@ class UpdateLogbookInfoAction
                     'chasisNumber' => $logbook['DistNumber'],
                 ],
                 [
-                    // 'regNumber' => $logbook['NumberPlate'] ?? null,
                     'createdOn' => Carbon::now(),
                     'status' => 1,
                     'pendingRequestsCreatedOn' => Carbon::now(),
@@ -47,7 +46,6 @@ class UpdateLogbookInfoAction
                 ],
                 [
                     'logbook_id' => $lb->id,
-                    // 'regNumber' => $logbook['NumberPlate'],
                     'CardCode' => $logbook['CardCode'],
                     'CustomerName' => $logbook['CustomerName'],
                     'DocNum' => $logbook['DocNum'],
@@ -65,30 +63,9 @@ class UpdateLogbookInfoAction
             );
         }
 
-        if ($existinglb && !$existinglb->status) {
-
-            Logbook::where('chasisNumber', $logbook['DistNumber'])
-                ->update([
-                    'status' => 1
-                ]);
-
-            LogbookProfile::where('chasisNumber', $logbook['DistNumber'])->update([
-                'status' => 1
-            ]);
-        }
 
 
-        if ($existinglb && $existinglb->status == null) {
-            Logbook::where('chasisNumber', $logbook['DistNumber'])
-                ->update([
-                    'status' => 1
-                ]);
-
-            LogbookProfile::where('chasisNumber', $logbook['DistNumber'])->update([
-                'status' => 1
-            ]);
-        }
-
+        (new UpdateLogbookProfileStatusAction($logbookProfile))->handle();
         (new ProcessFailedAllocationsAction($logbook['DistNumber']))->handle();
 
 

@@ -27,7 +27,7 @@ class BulkRequest extends Page implements HasTable
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::ArrowUpTray;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Bulk Operations';
+    protected static string|UnitEnum|null $navigationGroup = 'Logbook Management';
 
     protected static ?int $navigationSort = 3;
 
@@ -103,7 +103,7 @@ class BulkRequest extends Page implements HasTable
 
                     $filePath = $data['file'];
 
-                    Log::info("File uploaded to: " . $filePath);
+              
 
                     try {
                         $data = UploadProcessLog::create([

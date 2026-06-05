@@ -51,4 +51,9 @@ enum LogBookStatusEnum: string
             self::DIRECT_REGISTRATION => 'heroicon-m-truck',
         };
     }
+
+    public static function exists(int|string $value): bool
+    {
+        return self::tryFrom((string) $value) !== null;
+    }
 }

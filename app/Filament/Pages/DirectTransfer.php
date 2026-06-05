@@ -33,7 +33,7 @@ class DirectTransfer extends Page implements HasTable
 
     protected static string|UnitEnum|null $navigationGroup = 'Bulk Operations';
 
-    protected static ?int $navigationSort = 5;
+    protected static ?int $navigationSort = 7;
 
     public function table(Table $table): Table
     {

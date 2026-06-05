@@ -4,7 +4,7 @@ namespace App\Filament\Pages;
 use App\Actions\LogbookActions\GetChasisInfoAction;
 use App\Actions\LogbookActions\UpdateLogbookInfoAction;
 use App\Enums\UploadProcessTypeEnum;
-use App\Exports\TemplateExports\DispatchedLogbooksTemplateExport;
+use App\Exports\TemplateExports\LogbooksPendingRequestTemplateExport;
 use App\Models\UploadProcessLog;
 use App\Models\User;
 use BackedEnum;
@@ -23,19 +23,17 @@ use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 use UnitEnum;
 
-class Dispatch extends Page implements HasTable
+class WithIssues extends Page implements HasTable
 {
 
     use InteractsWithTable;
-    protected string $view = 'filament.pages.dispatches';
+    protected string $view = 'filament.pages.with-issues';
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::ArrowRight;
 
-    protected static ?string $navigationLabel = 'Dispatches';
+    protected static string|UnitEnum|null $navigationGroup = 'Bulk Operations';
 
-  protected static string|UnitEnum|null $navigationGroup = 'Bulk Operations';
-
-    protected static ?int $navigationSort = 6;
+    protected static ?int $navigationSort = 3;
 
     public function table(Table $table): Table
     {
@@ -84,22 +82,28 @@ class Dispatch extends Page implements HasTable
     {
         return [
 
-         Action::make('download')
+
+          Action::make('download')
             ->label('Download Template')
             ->icon('heroicon-o-arrow-down-tray')
             ->tooltip('Download hatching summary')
             ->action(function () {
 
                 return Excel::download(
-                    new DispatchedLogbooksTemplateExport(),
-                    now()->format('Y-m-d_H-i-s').'Dispatched Logbooks Template.xlsx'
+                    new LogbooksPendingRequestTemplateExport([[
+                        'chasis_number' => '',
+                        'reg_number' => '',
+                        'status' => '',
+                    ]]),
+                    'Direct Transfer Template.xlsx'
                 );
 
             }),
 
 
+
             Action::make('Add New Request')
-                ->label('Upload Dispatch')
+                ->label('Upload Direct Transfer')
                 ->icon('heroicon-o-arrow-up-tray')
                 ->form([
 
@@ -127,7 +131,7 @@ class Dispatch extends Page implements HasTable
                             'user_id' => auth()->id(),
                             'status' => 0,
                             'createdOn' => now(),
-                            'process_type' => UploadProcessTypeEnum::DISPATCHED->value,
+                            'process_type' => UploadProcessTypeEnum::DIRECT_TRANSFER_UPLOAD->value,
                             'createdBy' => auth()->id(),
                         ]);
 
@@ -177,7 +181,7 @@ class Dispatch extends Page implements HasTable
                     }
 
                 })
-                ->modalHeading('Upload Bulk File')
+                ->modalHeading('Upload Direct Transfer File')
                 ->modalSubmitActionLabel('Add Request')
                 ->modalWidth('lg'),
         ];
@@ -187,15 +191,16 @@ class Dispatch extends Page implements HasTable
     {
 
         if (auth()->user()?->hasAnyRole(['SuperAdmin'])) {
-            return UploadProcessLog::query()->where('process_type', UploadProcessTypeEnum::DISPATCHED->value);
+            return UploadProcessLog::query()->where('process_type', UploadProcessTypeEnum::DIRECT_TRANSFER_UPLOAD->value);
         }
 
         return UploadProcessLog::query()
             ->where('user_id', auth()->user()->id)
-            ->where('process_type', UploadProcessTypeEnum::DISPATCHED->value);
+            ->where('process_type', UploadProcessTypeEnum::DIRECT_TRANSFER_UPLOAD->value);
     }
 
-    public static function canViewAny(): bool
+    
+       public static function canViewAny(): bool
     {
         return auth()->user()->hasRole('SuperAdmin');
     }
