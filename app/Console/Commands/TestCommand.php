@@ -23,6 +23,11 @@ class TestCommand extends Command
     {
     //    $user = Auth::loginUsingId(12);
 
+          $data=   (new GetChasisInfoAction('MD625AF45T1D05417'))->handle();
+    
+
+      dd($data);
+
 
 
     $upload = UploadProcessLog::where('process_type', UploadProcessTypeEnum::PENDING_ACCEPTANCE->value)->first();
@@ -35,10 +40,7 @@ class TestCommand extends Command
 
 
 
-      $data=   (new GetChasisInfoAction('MD625GF55M1A00481'))->handle();
-    
 
-      dd($data);
         $totalWithIssues = LogbookProfile::withoutGlobalScopes()->where('status', LogBookStatusEnum::WITH_ISSUES->value)
             ->doesntHave('request')
             ->update([
