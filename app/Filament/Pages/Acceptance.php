@@ -200,7 +200,7 @@ class Acceptance extends Page implements HasTable
     }
 
     
-       public static function canViewAny(): bool
+   public static function canAccess(): bool
     {
         return auth()->user()->hasRole('SuperAdmin');
     }

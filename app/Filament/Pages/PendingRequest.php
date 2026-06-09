@@ -1,17 +1,13 @@
 <?php
 namespace App\Filament\Pages;
 
-use App\Actions\LogbookActions\GetChasisInfoAction;
-use App\Actions\LogbookActions\UpdateLogbookInfoAction;
 use App\Enums\UploadProcessTypeEnum;
 use App\Exports\TemplateExports\LogbooksPendingRequestTemplateExport;
 use App\Models\UploadProcessLog;
-use App\Models\User;
 use BackedEnum;
 use Filament\Actions\Action;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\Support\Icons\Heroicon;
@@ -19,7 +15,6 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 use UnitEnum;
@@ -169,7 +164,7 @@ class PendingRequest extends Page implements HasTable
     }
 
     
-       public static function canViewAny(): bool
+     public static function canAccess(): bool
     {
         return auth()->user()->hasRole('SuperAdmin');
     }

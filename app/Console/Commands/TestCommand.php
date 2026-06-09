@@ -23,7 +23,7 @@ class TestCommand extends Command
     {
     //    $user = Auth::loginUsingId(12);
 
-          $data=   (new GetChasisInfoAction('MD625AF45T1D05417'))->handle();
+          $data=   (new GetChasisInfoAction('MD625BF35T1D00019'))->handle();
     
 
       dd($data);

@@ -150,6 +150,13 @@ class UpdateRequest extends Page implements HasTable
 
                     } catch (\Throwable $th) {
 
+
+                        $record->update([
+                            'status' => 0,
+                        ]);
+
+
+
                         Log::info("Error uploading file: " . $th);
                         Notification::make()
                             ->title('Adding New Request Failed')
@@ -176,7 +183,7 @@ class UpdateRequest extends Page implements HasTable
             ->where('process_type', UploadProcessTypeEnum::UPDATE_REQUEST->value);
     }
 
-    public static function canViewAny(): bool
+    public static function canAccess(): bool
     {
         return auth()->user()->hasRole('SuperAdmin');
     }

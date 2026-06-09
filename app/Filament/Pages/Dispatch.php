@@ -33,7 +33,7 @@ class Dispatch extends Page implements HasTable
 
     protected static ?string $navigationLabel = 'Dispatches';
 
-  protected static string|UnitEnum|null $navigationGroup = 'Bulk Operations';
+    protected static string|UnitEnum|null $navigationGroup = 'Bulk Operations';
 
     protected static ?int $navigationSort = 6;
 
@@ -84,18 +84,18 @@ class Dispatch extends Page implements HasTable
     {
         return [
 
-         Action::make('download')
-            ->label('Download Template')
-            ->icon('heroicon-o-arrow-down-tray')
-            ->tooltip('Download hatching summary')
-            ->action(function () {
+            Action::make('download')
+                ->label('Download Template')
+                ->icon('heroicon-o-arrow-down-tray')
+                ->tooltip('Download hatching summary')
+                ->action(function () {
 
-                return Excel::download(
-                    new DispatchedLogbooksTemplateExport(),
-                    now()->format('Y-m-d_H-i-s').'Dispatched Logbooks Template.xlsx'
-                );
+                    return Excel::download(
+                        new DispatchedLogbooksTemplateExport(),
+                        now()->format('Y-m-d_H-i-s') . 'Dispatched Logbooks Template.xlsx'
+                    );
 
-            }),
+                }),
 
 
             Action::make('Add New Request')
@@ -195,8 +195,10 @@ class Dispatch extends Page implements HasTable
             ->where('process_type', UploadProcessTypeEnum::DISPATCHED->value);
     }
 
-    public static function canViewAny(): bool
+    public static function canAccess(): bool
     {
+
+
         return auth()->user()->hasRole('SuperAdmin');
     }
 

@@ -83,22 +83,24 @@ class DirectTransfer extends Page implements HasTable
         return [
 
 
-          Action::make('download')
-            ->label('Download Template')
-            ->icon('heroicon-o-arrow-down-tray')
-            ->tooltip('Download hatching summary')
-            ->action(function () {
+            Action::make('download')
+                ->label('Download Template')
+                ->icon('heroicon-o-arrow-down-tray')
+                ->tooltip('Download hatching summary')
+                ->action(function () {
 
-                return Excel::download(
-                    new LogbooksPendingRequestTemplateExport([[
-                        'chasis_number' => '',
-                        'reg_number' => '',
-                        'status' => '',
-                    ]]),
-                    'Direct Transfer Template.xlsx'
-                );
+                    return Excel::download(
+                        new LogbooksPendingRequestTemplateExport([
+                            [
+                                'chasis_number' => '',
+                                'reg_number' => '',
+                                'status' => '',
+                            ]
+                        ]),
+                        'Direct Transfer Template.xlsx'
+                    );
 
-            }),
+                }),
 
 
 
@@ -199,8 +201,8 @@ class DirectTransfer extends Page implements HasTable
             ->where('process_type', UploadProcessTypeEnum::DIRECT_TRANSFER_UPLOAD->value);
     }
 
-    
-       public static function canViewAny(): bool
+
+    public static function canAccess(): bool
     {
         return auth()->user()->hasRole('SuperAdmin');
     }
