@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Actions\LogbookActions\GetChasisInfoAction;
+use App\Actions\LogbookActions\SyncChasisSalesDataAction;
 use App\Enums\LogBookStatusEnum;
 use App\Enums\UploadProcessTypeEnum;
 use App\Models\LogbookProfile;
@@ -23,7 +23,7 @@ class TestCommand extends Command
     {
     //    $user = Auth::loginUsingId(12);
 
-          $data=   (new GetChasisInfoAction('MD625BF35T1D00019'))->handle();
+          $data=   (new SyncChasisSalesDataAction('20260605'))->handle();
     
 
       dd($data);

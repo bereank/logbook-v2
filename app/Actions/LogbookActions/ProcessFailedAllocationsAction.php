@@ -24,11 +24,12 @@ class ProcessFailedAllocationsAction
             ->where('status', 'Failed')
             ->first();
 
-        if (! $log) {
+        if (!$log) {
+        Log::info('(DONE ON SALES/STOCK SYNC) There is no Failed Allocation ' . $chasisNumber . ' ' . $log?->regNumber);
             return false;
         }
 
-        Log::info('(DONE ON SALES/STOCK SYNC) Handling Failed Allocation For : ' . $chasisNumber . ' ' . $log?->regNumber);
+      
 
         $updateValues = false;
 

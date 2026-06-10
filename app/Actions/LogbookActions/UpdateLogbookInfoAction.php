@@ -40,7 +40,7 @@ class UpdateLogbookInfoAction
                 ]
             );
 
-            $logbookn = LogbookProfile::updateOrCreate(
+            $logbookProfile = LogbookProfile::updateOrCreate(
                 [
                     'chasisNumber' => $logbook['DistNumber'],
                 ],
