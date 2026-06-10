@@ -42,9 +42,9 @@ class SyncSalesData extends Page implements HasTable
                     ->label('Requested By')
                     ->searchable(),
                 TextColumn::make('name')
-                    ->label('Chassis Number'),
+                    ->label('Description'),
                 TextColumn::make('file_name')
-                    ->label('Reg Number'),
+                    ->label('Date'),
 
                 TextColumn::make('status')
                     ->label('Status')
