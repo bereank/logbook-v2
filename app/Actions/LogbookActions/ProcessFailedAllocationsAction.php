@@ -33,14 +33,16 @@ class ProcessFailedAllocationsAction
 
         $updateValues = false;
 
-        $logbookWithNullReg = Logbook::where('chasisNumber', $chasisNumber)
-            ->whereNull('regNumber')->first();
+        $logbookWithNullReg = Logbook::withoutGlobalScopes()->where('chasisNumber', $chasisNumber)
+            ->whereNull('regNumber')
+            ->first();
 
         if ($logbookWithNullReg) {
             $updateValues = true;
         }
 
-        $LogbookProfileWithNull = LogbookProfile::where('chasisNumber', $chasisNumber)
+        $LogbookProfileWithNull = LogbookProfile::withoutGlobalScopes()
+        ->where('chasisNumber', $chasisNumber)
             ->whereNull('regNumber')
             ->first();
 
@@ -52,12 +54,12 @@ class ProcessFailedAllocationsAction
             return false;
         }
 
-        Logbook::where('chasisNumber', $chasisNumber)
+        Logbook::withoutGlobalScopes()->where('chasisNumber', $chasisNumber)
             ->update([
                 'regNumber' => $log->regNumber,
             ]);
 
-        LogbookProfile::where('chasisNumber', $chasisNumber)
+        LogbookProfile::withoutGlobalScopes()->where('chasisNumber', $chasisNumber)
             ->update([
                 'regNumber' => $log?->regNumber,
             ]);

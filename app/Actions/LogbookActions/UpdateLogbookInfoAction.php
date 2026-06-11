@@ -22,14 +22,17 @@ class UpdateLogbookInfoAction
         $logbook = $this->logbook;
 
 
-        $logbookProfile = LogbookProfile::where('chasisNumber', $logbook['DistNumber'])->first();
+        $logbookProfile = LogbookProfile::withoutGlobalScopes()
+        ->where('chasisNumber', $logbook['DistNumber'])
+        ->first();
 
 
         if (!$logbookProfile) {
 
             Log::info('DistNumber: ' . $logbook['DistNumber'] . ' - No existing logbook profile found. Creating new logbook and profile.');
 
-            $lb = Logbook::updateOrCreate(
+            $lb = Logbook::withoutGlobalScopes()
+            ->updateOrCreate(
                 [
                     'chasisNumber' => $logbook['DistNumber'],
                 ],
@@ -40,7 +43,8 @@ class UpdateLogbookInfoAction
                 ]
             );
 
-            $logbookProfile = LogbookProfile::updateOrCreate(
+            $logbookProfile = LogbookProfile::withoutGlobalScopes()
+            ->updateOrCreate(
                 [
                     'chasisNumber' => $logbook['DistNumber'],
                 ],
