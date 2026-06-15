@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Jobs;
+namespace App\Jobs\BulkUploads;
 
 use App\Exports\ExportLogs;
 use App\Imports\BulkTaskImports;
-use App\Jobs\SendLbPendingRequestsImportSuccessNotificationJob;
 use App\Models\Logbook;
 use App\Models\LogbookProfile;
 use App\Models\SystemStatus;
