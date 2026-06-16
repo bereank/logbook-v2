@@ -70,10 +70,13 @@ class SyncSalesForPeriodCommand extends Command
 
                 Log::info("Failed  " . $th);
 
+                $this->info($th->getMessage());
+
                 $record->update([
                     'status' => 0,
                     'name' => "Failed Syncing for: " . $dateFormatted . ", Total Pulled Sync: " . count($logbooks),
                 ]);
+                continue;
             }
 
 
