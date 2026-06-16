@@ -16,6 +16,18 @@ class UpdateLogbookProfileStatusAction
     public function handle()
     {
 
+        if (!$this->logbookProfile->status) {
+            $this->logbookProfile->update([
+                'status' => 1
+            ]);
+
+            $this->logbookProfile->update([
+                'status' => 1
+            ]);
+
+            return true;
+        }
+
         if (LogBookStatusEnum::exists($this->logbookProfile->status)) {
             return true;
         }
