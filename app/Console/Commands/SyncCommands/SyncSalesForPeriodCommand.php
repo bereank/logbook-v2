@@ -61,18 +61,18 @@ class SyncSalesForPeriodCommand extends Command
 
                 $record->update([
                     'status' => 1,
-                    'name' => 'Sync Sales Data For: ' . $dateFormatted . " Total Sync:" . count($logbooks),
+                    'name' => 'Sync Sales Data For: ' . $dateFormatted . " Total Sync: " . count($logbooks),
                 ]);
 
 
             } catch (\Throwable $th) {
 
 
-                Log::info("Error Creating Request: " . $th);
+                Log::info("Failed  " . $th);
 
                 $record->update([
                     'status' => 0,
-                    'name' => "Failed Syncing for: " . $dateFormatted . ", Error: " . $th->getMessage()
+                    'name' => "Failed Syncing for: " . $dateFormatted . ", Total Pulled Sync: " . count($logbooks),
                 ]);
             }
 
