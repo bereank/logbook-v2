@@ -63,6 +63,15 @@ class UpdateRequest extends Page implements HasTable
                         '0' => 'success',
                     }),
 
+                          TextColumn::make('created_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('updated_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+
             ])
             ->defaultSort('id', 'desc')
             ->filters([
@@ -72,7 +81,7 @@ class UpdateRequest extends Page implements HasTable
 
             ])
             ->bulkActions([
-                DeleteBulkAction::make(),
+               // DeleteBulkAction::make(),
             ]);
     }
 
@@ -136,7 +145,7 @@ class UpdateRequest extends Page implements HasTable
 
 
                         $record->update([
-                            'status' => 1,
+                            'status' => 0,
                         ]);
 
 
@@ -152,10 +161,8 @@ class UpdateRequest extends Page implements HasTable
 
 
                         $record->update([
-                            'status' => 0,
+                            'status' => 1,
                         ]);
-
-
 
                         Log::info("Error uploading file: " . $th);
                         Notification::make()
