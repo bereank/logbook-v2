@@ -46,7 +46,7 @@ class ProcessDirectTransferIImportmportJob implements ShouldQueue
     {
         $uploadProcessLog = $this->uploadProcessLog;
 
-        if (! Storage::disk('s3')->exists($uploadProcessLog->file_name)) {
+        if (!Storage::disk('s3')->exists($uploadProcessLog->file_name)) {
             dd($uploadProcessLog);
         }
 
@@ -123,7 +123,7 @@ class ProcessDirectTransferIImportmportJob implements ShouldQueue
         }
 
         $this->uploadProcessLog->update([
-            'status' => 0,
+            'status' => 1,
         ]);
 
     }

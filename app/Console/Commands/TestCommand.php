@@ -6,7 +6,6 @@ use App\Actions\LogbookActions\GetChasisInfoAction;
 use App\Actions\LogbookActions\SyncChasisSalesDataAction;
 use App\Enums\LogBookStatusEnum;
 use App\Enums\UploadProcessTypeEnum;
-use App\Jobs\BulkUploads\ProcessDirectTransferIImportmportJob;
 use App\Models\LogbookProfile;
 use App\Models\UploadProcessLog;
 use Illuminate\Console\Attributes\Description;
@@ -25,14 +24,14 @@ class TestCommand extends Command
     public function handle()
     {
 
-    $uploadProcessLog = UploadProcessLog::findOrFail(1530);
+    // $uploadProcessLog = UploadProcessLog::findOrFail(1530);
 
-    (new ProcessDirectTransferIImportmportJob($uploadProcessLog))->handle();
+    // (new ProcessDirectTransferIImportmportJob($uploadProcessLog))->handle();
 
-    dd("Done");
+    // dd("Done");
 
     $user = Auth::loginUsingId(12);
-       $chasis = ' MD625AE31T1AH6173';
+       $chasis = ' MD625AE37S1N00570';
         $chasisInfo = (new GetChasisInfoAction($chasis))->handle();
 
         dd($chasisInfo);

@@ -165,7 +165,6 @@ class DirectTransfer extends Page implements HasTable
 
 
 
-
                     } catch (\Throwable $th) {
 
                         Log::info("Error uploading file: " . $th);

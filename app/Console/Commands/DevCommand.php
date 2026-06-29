@@ -6,10 +6,12 @@ use App\Actions\LogbookActions\GetChasisInfoAction;
 use App\Actions\LogbookActions\ProcessFailedAllocationsAction;
 use App\Enums\LogBookStatusEnum;
 use App\Exports\PendingAcceptanceNotificationExport;
+use App\Jobs\BulkUploads\ProcessDirectTransferIImportmportJob;
 use App\Mail\PendingAcceptanceNotificationMail;
 use App\Models\Logbook;
 use App\Models\LogbookProfile;
 use App\Models\UploadedDataLog;
+use App\Models\UploadProcessLog;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
@@ -28,6 +30,18 @@ class DevCommand extends Command
      */
     public function handle()
     {
+
+
+    $uploadProcessLog = UploadProcessLog::findOrFail(1555);
+
+    (new ProcessDirectTransferIImportmportJob($uploadProcessLog))->handle();
+
+
+    dd("Done");
+
+
+
+
 
 
 
