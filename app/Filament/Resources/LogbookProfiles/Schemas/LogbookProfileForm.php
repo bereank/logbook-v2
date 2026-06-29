@@ -86,7 +86,7 @@ class LogbookProfileForm
                                     ->label('PIN Number 3'),
 
                                                         Toggle::make('is_instant_transfer')
-                                    ->readOnly(!$canEdit)
+                      
                                     ->label('Is Instant Transfer'),
 
                             ])->columns(4),
