@@ -63,7 +63,7 @@ class UpdateRequest extends Page implements HasTable
                         '0' => 'success',
                     }),
 
-                          TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -81,7 +81,7 @@ class UpdateRequest extends Page implements HasTable
 
             ])
             ->bulkActions([
-               // DeleteBulkAction::make(),
+                // DeleteBulkAction::make(),
             ]);
     }
 
@@ -192,6 +192,8 @@ class UpdateRequest extends Page implements HasTable
 
     public static function canAccess(): bool
     {
+
+        return true;
         return auth()->user()->hasRole('SuperAdmin');
     }
 
