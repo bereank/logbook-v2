@@ -62,11 +62,9 @@ class UpdateRequest extends Page implements HasTable
                         '1' => 'danger',
                         '0' => 'success',
                     }),
-
                 TextColumn::make('created_at')
                     ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->sortable(),
                 TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
