@@ -5,10 +5,8 @@ use App\Actions\LogbookActions\GetChasisInfoAction;
 use App\Actions\LogbookActions\UpdateLogbookInfoAction;
 use App\Enums\UploadProcessTypeEnum;
 use App\Models\UploadProcessLog;
-use App\Models\User;
 use BackedEnum;
 use Filament\Actions\Action;
-use Filament\Actions\DeleteBulkAction;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
@@ -17,7 +15,6 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use UnitEnum;
 
@@ -49,17 +46,21 @@ class UpdateRequest extends Page implements HasTable
                 TextColumn::make('status')
                     ->label('Status')
                     ->badge()
+                    ->tooltip(fn($record) => "
+        Remarks: {$record->remarks}
+    ")
                     ->icon(fn(string $state): string => match ($state) {
+                        '2' => 'heroicon-m-x-mark',
                         '1' => 'heroicon-m-x-mark',
                         '0' => 'heroicon-m-check',
-
                     })
                     ->formatStateUsing(fn(string $state): mixed => match ($state) {
                         '1' => 'Processing',
                         '0' => 'Processed',
                     })
                     ->color(fn(string $state): string => match ($state) {
-                        '1' => 'danger',
+                        '2' => 'Failed',
+                        '1' => 'primary',
                         '0' => 'success',
                     }),
                 TextColumn::make('created_at')
@@ -128,11 +129,19 @@ class UpdateRequest extends Page implements HasTable
                                 ->title('No logbook information found for the provided chassis number')
                                 ->danger()
                                 ->send();
+
+
+
+                            $record->update([
+                                'status' => 2,
+                                'remarks' => 'No logbook information found for the provided chassis number',
+                            ]);
+
                             return;
                         }
 
 
-                        Log::info("Logbook info retrieved: " . json_encode($logbookInfo));
+
 
                         (new UpdateLogbookInfoAction($logbookInfo))->handle();
 
