@@ -22,6 +22,20 @@ class LogbookRequestForm
                     ->columnSpan('full')
                     ->schema([
 
+                       Section::make('Logbook Profile')
+                    ->schema([
+                        TextInput::make('chasisNumber')
+                            ->readOnly(!$canEdit)
+                            ->label('Chasis Number')
+                            ->required(),
+
+                        TextInput::make('regNumber')
+                            ->readOnly(!$canEdit)
+                            ->label('Reg Number')
+                            ->required(),
+
+                    ])->columns(2),
+
                         Section::make('First Owner Details')
                             ->schema([
                                 TextInput::make('name1')
@@ -70,9 +84,8 @@ class LogbookRequestForm
                                     ->label('PIN Number 3'),
 
 
-            
-
-                            ])->columns(4),
+        
+                            ])->columns(3),
 
                     ]),
 

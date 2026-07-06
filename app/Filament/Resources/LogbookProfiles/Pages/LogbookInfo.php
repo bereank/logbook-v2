@@ -207,15 +207,22 @@ class LogbookInfo extends Page
                     'createdOn' => Carbon::now(),
                     'status' => 1,
                     'createdBy' => Auth::user()->id,
-                    'is_instant_transfer' => true,
                 ]
             );
 
-            LogbookProfile::where('chasisNumber', $this->record->chasisNumber)
-               ->update([
+            
+
+            $logoobookProfile = LogbookProfile::where('chasisNumber', $this->record->chasisNumber)->first();
+             $logoobookProfile->update([
                    'status' => LogBookStatusEnum::PROCESSING,
                    'applicationNumber' => $request->ntsaApplicationNumber
                ]);
+
+            if ( $logoobookProfile->DocDate >= '2026-07-01') {
+               $request->update([
+                    'is_instant_transfer' => true
+               ]);
+            }
 
 
             Notification::make()

@@ -2,6 +2,7 @@
 namespace App\Filament\Pages;
 
 use App\Enums\LogBookStatusEnum;
+use App\Filament\Resources\LogbookRequests\LogbookRequestResource;
 use App\Models\Logbook;
 use App\Models\LogbookProfile;
 use App\Models\LogbookRequest;
@@ -73,9 +74,15 @@ class Tickets extends Page implements HasTable
                     ),
 
                 TextColumn::make('chasisNumber')
-                    ->copyable()
+                 
                     ->badge()
-                    ->color('indigo')
+                    ->color('cyan')
+                     ->openUrlInNewTab()
+                    ->url(
+                        fn($record) => $record->id
+                        ? LogbookRequestResource::getUrl('view', ['record' => $record->id])
+                        : null
+                    )
                     ->searchable(),
 
                 TextColumn::make('profile.regNumber')
@@ -131,6 +138,7 @@ class Tickets extends Page implements HasTable
                             ->label('Assign To')
                             ->options(
                                 User::role(['SuperAdmin'])
+                                ->where('isActive',true)
                                     ->pluck('name', 'id')
                             )
                             ->searchable()
