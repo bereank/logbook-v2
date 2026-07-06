@@ -33,7 +33,7 @@ enum LogBookStatusEnum: string
             self::PROCESSING => 'indigo',
             self::PENDING_ACCEPTANCE => 'info',
             self::WITH_ISSUES => 'danger',
-            self::ACCEPTED => 'primary',
+            self::ACCEPTED => 'green',
             self::DISPATCHED => 'success',
             self::DIRECT_REGISTRATION => 'success',
         };
