@@ -25,7 +25,10 @@ class PendingAcceptanceNotificationExport implements FromCollection, ShouldAutoS
     public function collection()
     {
 
-        $logbooks = LogbookProfile::where('status', $this->status)->get();
+        $logbooks = LogbookProfile::select('chasisNumber', 'regNumber', 'pendingAcceptanceCreatedOn')
+        ->distinct()
+        ->where('status', $this->status)
+        ->get();
 
         return $this->records = $logbooks;
     }

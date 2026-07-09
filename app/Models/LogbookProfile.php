@@ -20,7 +20,7 @@ class LogbookProfile extends Model
     {
         static::addGlobalScope('excludeCashCustomer', function (Builder $builder) {
 
-            if (! auth()->user()?->hasAnyRole(['Financier'])) {
+            if (!auth()->user()?->hasAnyRole(['Financier'])) {
                 return;
             }
 
@@ -64,7 +64,6 @@ class LogbookProfile extends Model
             if (auth()->user()?->hasAnyRole(['SuperAdmin'])) {
                 return;
             }
-            // $builder->whereNotIn('groupCode', ['direct_transfer']);
 
             $builder->where(function ($q) {
                 $q->whereNull('groupCode')
@@ -72,6 +71,15 @@ class LogbookProfile extends Model
             });
 
         });
+
+        static::addGlobalScope('uniqueChasis', function (Builder $builder) {
+            $builder->whereIn('id', function ($query) {
+                $query->selectRaw('MIN(id)')
+                    ->from('logbook_profiles')
+                    ->groupBy('chasisNumber');
+            });
+        });
+
         static::addGlobalScope('cleanChasis', function ($builder) {
             $builder->where('chasisNumber', 'not like', '%.%');
         });
@@ -82,7 +90,7 @@ class LogbookProfile extends Model
 
         static::addGlobalScope('onlyChasisLinkedToPin', function ($builder) {
 
-            if (! auth()->user()?->hasAnyRole(['Dealer', 'Customer'])) {
+            if (!auth()->user()?->hasAnyRole(['Dealer', 'Customer'])) {
                 return;
             }
 

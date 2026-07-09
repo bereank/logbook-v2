@@ -19,8 +19,7 @@ class DevCommand extends Command
     public function handle()
     {
 
-        Mail::to('caroline.akinyi@cargen.com')
-            ->cc(['kenneth.kibet@cargen.com', 'joyleen.lubanga@cargen.com', 'gideon.yegon@cargen.com'])
+        Mail::to('kenneth.kibet@cargen.com')
             ->send(new PendingAcceptanceNotificationMail(LogBookStatusEnum::PENDING_ACCEPTANCE));
 
     }
