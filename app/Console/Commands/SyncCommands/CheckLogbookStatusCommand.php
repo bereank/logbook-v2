@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Console\Commands\SyncCommands;
 
 use App\Enums\LogBookStatusEnum;
@@ -8,7 +9,6 @@ use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 
 #[Signature('app:check-logbook-status')]
 #[Description('Check logbook status')]
@@ -22,12 +22,14 @@ class CheckLogbookStatusCommand extends Command
         $user = Auth::loginUsingId(78);
 
         $logbooks = LogbookProfile::doesntHave('request')
-            ->where('status', LogBookStatusEnum::PENDING_ACCEPTANCE)->update([
+            ->where('status', LogBookStatusEnum::PENDING_ACCEPTANCE)
+            ->update([
                     'status' => LogBookStatusEnum::PENDING->value,
                 ]);
 
 
-       $logbookWithPendingAcceptance = LogbookProfile::doesntHave('request')
+     
+        $logbookWithPendingAcceptance = LogbookProfile::doesntHave('request')
             ->where('status', LogBookStatusEnum::PENDING_ACCEPTANCE)->count();
 
 
@@ -57,14 +59,13 @@ class CheckLogbookStatusCommand extends Command
 
 
             LogbookRequest::where('chasisNumber', $logbook->chasisNumber)
-            ->update([
-                'status' => $logbook->status,
-            ]);
+                ->update([
+                    'status' => $logbook->status,
+                ]);
 
         });
 
 
-        
         $LogbookRequest = LogbookRequest::where('status', LogBookStatusEnum::PENDING_ACCEPTANCE->value)->count();
 
         $this->info('Updating status for: ' . $LogbookRequest);

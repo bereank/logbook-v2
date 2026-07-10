@@ -4,7 +4,9 @@ namespace App\Exports;
 
 use App\Enums\LogBookStatusEnum;
 use App\Models\LogbookProfile;
+use App\Models\LogbookRequest;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithHeadings;
@@ -25,10 +27,13 @@ class PendingAcceptanceNotificationExport implements FromCollection, ShouldAutoS
     public function collection()
     {
 
-        $logbooks = LogbookProfile::select('chasisNumber', 'regNumber', 'pendingAcceptanceCreatedOn')
-        ->distinct()
-        ->where('status', $this->status)
-        ->get();
+        $logbooks = LogbookRequest::select(
+            'chasisNumber',
+            'regNumber',
+            'createdOn'
+        )
+            ->where('status', $this->status)
+            ->get();
 
         return $this->records = $logbooks;
     }
@@ -38,7 +43,7 @@ class PendingAcceptanceNotificationExport implements FromCollection, ShouldAutoS
         return [
             'Chasis Number',
             'Registration Number',
-            'Pending Acceptance Since',
+            'Created On',
         ];
     }
 
@@ -48,7 +53,7 @@ class PendingAcceptanceNotificationExport implements FromCollection, ShouldAutoS
         return [
             $record->chasisNumber,
             $record->regNumber,
-            $record->pendingAcceptanceCreatedOn,
+            $record->createdOn,
         ];
     }
 
@@ -59,7 +64,7 @@ class PendingAcceptanceNotificationExport implements FromCollection, ShouldAutoS
             1 => ['font' => ['bold' => true]],
 
             // Add borders to all cells
-            'A1:C'.($this->records->count() + 1) => [
+            'A1:C' . ($this->records->count() + 1) => [
                 'borders' => [
                     'allBorders' => [
                         'borderStyle' => Border::BORDER_THIN,

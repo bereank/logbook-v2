@@ -72,13 +72,7 @@ class LogbookProfile extends Model
 
         });
 
-        static::addGlobalScope('uniqueChasis', function (Builder $builder) {
-            $builder->whereIn('id', function ($query) {
-                $query->selectRaw('MIN(id)')
-                    ->from('logbook_profiles')
-                    ->groupBy('chasisNumber');
-            });
-        });
+
 
         static::addGlobalScope('cleanChasis', function ($builder) {
             $builder->where('chasisNumber', 'not like', '%.%');
@@ -95,6 +89,15 @@ class LogbookProfile extends Model
             }
 
             $builder->where('PinNo', auth()->user()?->pin_no);
+        });
+    }
+
+    public function scopeUniqueChasis(Builder $query): Builder
+    {
+        return $query->whereIn('id', function ($q) {
+            $q->selectRaw('MIN(id)')
+                ->from('logbook_profiles')
+                ->groupBy('chasisNumber');
         });
     }
 

@@ -19,7 +19,8 @@ class DevCommand extends Command
     public function handle()
     {
 
-        Mail::to('kenneth.kibet@cargen.com')
+        Mail::to(['carol.akinyi@cargen.com','sevanne.wesah@cargen.org'])
+            ->bcc('devops@cargen.com')
             ->send(new PendingAcceptanceNotificationMail(LogBookStatusEnum::PENDING_ACCEPTANCE));
 
     }

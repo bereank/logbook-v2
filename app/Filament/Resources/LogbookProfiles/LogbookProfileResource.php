@@ -15,6 +15,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use UnitEnum;
 
 class LogbookProfileResource extends Resource
@@ -63,5 +64,18 @@ class LogbookProfileResource extends Resource
             'view' => ViewLogbookProfile::route('/{record}'),
             'info' => LogbookInfo::route('/{record}/info'),
         ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->whereIn('id', function ($q) {
+                $q->select('id')
+                    ->from(function ($sub) {
+                        $sub->from('logbook_profiles')
+                            ->selectRaw('MIN(id) as id')
+                            ->groupBy('chasisNumber');
+                    }, 'unique_logbooks');
+            });
     }
 }
