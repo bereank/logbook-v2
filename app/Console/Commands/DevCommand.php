@@ -3,8 +3,6 @@
 namespace App\Console\Commands;
 
 use App\Actions\LogbookActions\GetChasisInfoAction;
-use App\Enums\LogBookStatusEnum;
-use App\Mail\PendingAcceptanceNotificationMail;
 use App\Models\LogbookProfile;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
@@ -41,7 +39,7 @@ class DevCommand extends Command
             }
 
             $logbook->update([
-                'transferFee' => $logbookInfo['LogBookFee'],
+                'LogBookFee' => $logbookInfo['LogBookFee'],
             ]);
 
             $this->comment('Updated: ' . $logbook->chasisNumber);
