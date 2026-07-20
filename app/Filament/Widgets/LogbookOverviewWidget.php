@@ -35,6 +35,11 @@ class LogbookOverviewWidget extends StatsOverviewWidget
                 ->descriptionIcon('heroicon-m-arrow-right')
                 ->description('Direct Trasfer')
                 ->color(LogBookStatusEnum::DIRECT_REGISTRATION->color()),
+
+                  Stat::make('Dispatched', number_format(LogbookProfile::where('status', LogBookStatusEnum::DISPATCHED->value)->count()))
+                ->descriptionIcon('heroicon-m-arrow-right')
+                ->description('Direct Trasfer')
+                ->color(LogBookStatusEnum::DISPATCHED->color()),
         ];
     }
 }

@@ -20,32 +20,32 @@ class LogbookRequestsTable
 
         return $table
             ->columns([
-                 TextColumn::make('status')
+                TextColumn::make('status')
                     ->label('Status')
                     ->badge()
                     ->formatStateUsing(
-                        fn ($state) => LogBookStatusEnum::from($state)->label()
+                        fn($state) => LogBookStatusEnum::from($state)->label()
                     )
                     ->color(
-                        fn ($state) => LogBookStatusEnum::from($state)->color()
+                        fn($state) => LogBookStatusEnum::from($state)->color()
                     ),
 
 
                 TextColumn::make('profile.DocDate')
                     ->date('Y-m-d')
-                    ->visible(fn () => $isAdmin)
+                    ->visible(fn() => $isAdmin)
                     ->label('Doc Date'),
 
                 TextColumn::make('owner_display')
                     ->label('Customer Name')
                     ->getStateUsing(
-                        fn ($record) => $record->profile->CustomerName ?? $record->profile->NumAtCard
+                        fn($record) => $record->profile->CustomerName ?? $record->profile->NumAtCard
                     ),
 
                 TextColumn::make('owner_display')
                     ->label('Customer Name')
                     ->getStateUsing(
-                        fn ($record) => $record->profile->CustomerName ?? $record->profile?->NumAtCard ?? 'N/A'
+                        fn($record) => $record->profile->CustomerName ?? $record->profile?->NumAtCard ?? 'N/A'
                     ),
 
                 TextColumn::make('chasisNumber')
@@ -55,31 +55,32 @@ class LogbookRequestsTable
                     ->searchable(),
 
                 TextColumn::make('profile.regNumber')
+                    ->searchable()
                     ->label('Reg Number'),
 
                 TextColumn::make('profile.isAvailable')
                     ->label('LB Status')
-                    ->tooltip(fn ($state) => $state ? 'Logbook is available' : 'Logbook is not available')
+                    ->tooltip(fn($state) => $state ? 'Logbook is available' : 'Logbook is not available')
                     ->badge()
-                    ->formatStateUsing(fn ($state) => $state ? 'Yes' : 'No')
+                    ->formatStateUsing(fn($state) => $state ? 'Yes' : 'No')
                     ->toggleable(isToggledHiddenByDefault: false)
-                    ->color(fn ($state) => $state ? 'success' : 'warning'),
+                    ->color(fn($state) => $state ? 'success' : 'warning'),
 
                 TextColumn::make('branch_display')
                     ->label('Branch/Dealer')
                     ->getStateUsing(
-                        fn ($record) => $record->profile?->logbookOwner?->name ?? $record->profile?->Location ?? 'N/A'
+                        fn($record) => $record->profile?->logbookOwner?->name ?? $record->profile?->Location ?? 'N/A'
                     )
                     ->toggleable(isToggledHiddenByDefault: false)
-                    ->visible(fn () => $isAdmin),
+                    ->visible(fn() => $isAdmin),
 
                 TextColumn::make('sap_location')
                     ->label('SAP Location')
                     ->getStateUsing(
-                        fn ($record) => $record->profile?->Location ?? 'N/A'
+                        fn($record) => $record->profile?->Location ?? 'N/A'
                     )
                     ->toggleable(isToggledHiddenByDefault: false)
-                    ->visible(fn () => $isAdmin),
+                    ->visible(fn() => $isAdmin),
 
                 TextColumn::make('user.name')
                     ->label('Requested By'),
@@ -104,7 +105,7 @@ class LogbookRequestsTable
                     ->multiple()
                     ->options(
                         collect(LogBookStatusEnum::cases())
-                            ->mapWithKeys(fn ($case) => [
+                            ->mapWithKeys(fn($case) => [
                                 $case->value => $case->label(),
                             ])
                             ->toArray()
@@ -116,7 +117,7 @@ class LogbookRequestsTable
                         LogBookStatusEnum::WITH_ISSUES,
                     ])
                     ->query(function ($query, array $data) {
-                        if (! filled($data['values'])) {
+                        if (!filled($data['values'])) {
                             return;
                         }
 
@@ -127,7 +128,7 @@ class LogbookRequestsTable
             ])
             ->recordActions([
                 ViewAction::make(),
-                EditAction::make()->hidden(fn ($record) => $record->isClosed),
+                EditAction::make()->hidden(fn($record) => $record->isClosed),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
