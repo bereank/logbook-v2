@@ -73,10 +73,9 @@ class LogbookProfile extends Model
         });
 
 
-
-        static::addGlobalScope('cleanChasis', function ($builder) {
-            $builder->where('chasisNumber', 'not like', '%.%');
-        });
+        // static::addGlobalScope('cleanChasis', function ($builder) {
+        //     $builder->where('chasisNumber', 'not like', '%.%');
+        // });
 
         static::addGlobalScope('onlyStatus', function ($builder) {
             $builder->whereIn('status', [1, 2, 3, 4, 5, 6, 7]);

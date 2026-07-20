@@ -23,10 +23,10 @@ class LogbookProfilesTable
                     ->label('Status')
                     ->badge()
                     ->formatStateUsing(
-                        fn ($state) => LogBookStatusEnum::from($state)->label()
+                        fn($state) => LogBookStatusEnum::from($state)->label()
                     )
                     ->color(
-                        fn ($state) => LogBookStatusEnum::from($state)->color()
+                        fn($state) => LogBookStatusEnum::from($state)->color()
                     ),
 
                 TextColumn::make('createdOn')
@@ -34,18 +34,16 @@ class LogbookProfilesTable
                 TextColumn::make('DocDate')
                     ->date('Y-m-d')
                     ->label('SAP Doc Date')
-                    ->visible(fn () => $isAdmin),
+                    ->visible(fn() => $isAdmin),
 
                 TextColumn::make('CardCode')
                     ->label('Customer Code')
-                    ->visible(fn () => $isAdmin)
-                    ->searchable(),
+                    ->visible(fn() => $isAdmin),
 
                 TextColumn::make('CustomerName')
                     ->label('Customer Name')
                     ->wrap()
-                    ->visible(fn () => $isAdmin)
-                    ->searchable(),
+                    ->visible(fn() => $isAdmin),
 
                 TextColumn::make('chasisNumber')
                     ->label('Chasis Number')
@@ -55,36 +53,35 @@ class LogbookProfilesTable
                     ->searchable(),
 
                 TextColumn::make('regNumber')
+
+                    ->searchable()
                     ->label('Reg Number'),
 
                 TextColumn::make('PinNo')
-                    ->visible(fn () => $isAdmin)
+                    ->visible(fn() => $isAdmin)
                     ->label('PIN Number'),
 
                 TextColumn::make('isAvailable')
                     ->label('LB Av.')
-                    ->tooltip(fn ($state) => $state ? 'Logbook is available' : 'Logbook is not available')
+                    ->tooltip(fn($state) => $state ? 'Logbook is available' : 'Logbook is not available')
                     ->badge()
-                    ->formatStateUsing(fn ($state) => $state ? 'Yes' : 'No')
-                    ->color(fn ($state) => $state ? 'success' : 'warning'),
+                    ->formatStateUsing(fn($state) => $state ? 'Yes' : 'No')
+                    ->color(fn($state) => $state ? 'success' : 'warning'),
 
-                TextColumn::make('owner_display')
+                TextColumn::make('logbookOwner.name')
                     ->label('Branch/Dealer')
-                    ->getStateUsing(
-                        fn ($record) => $record->logbookOwner?->name ?? $record?->Location
-                    )
-                    ->visible(fn () => $isAdmin),
+                    ->default(fn($record) => $record->Location),
 
                 TextColumn::make('sap_location')
                     ->label('SAP Location')
                     ->getStateUsing(
-                        fn ($record) => $record?->Location
+                        fn($record) => $record?->Location
                     )
-                    ->visible(fn () => $isAdmin),
+                    ->visible(fn() => $isAdmin),
 
                 TextColumn::make('LogBookFee')
                     ->numeric(decimalPlaces: 2)
-                    ->tooltip(fn ($state) => "Logbook fee is $state")
+                    ->tooltip(fn($state) => "Logbook fee is $state")
                     ->alignRight()
                     ->label('L.Fee'),
 
@@ -116,8 +113,8 @@ class LogbookProfilesTable
 
                 Action::make('Transfer')
                     ->openUrlInNewTab()
-                    ->visible(fn ($record) => (int) $record->status == LogBookStatusEnum::PENDING->value && $record->regNumber)
-                    ->url(fn ($record) => LogbookProfileResource::getUrl('info', ['record' => $record]))
+                    ->visible(fn($record) => (int) $record->status == LogBookStatusEnum::PENDING->value && $record->regNumber)
+                    ->url(fn($record) => LogbookProfileResource::getUrl('info', ['record' => $record]))
                     ->icon('heroicon-m-paper-airplane'),
             ])
             ->toolbarActions([]);
