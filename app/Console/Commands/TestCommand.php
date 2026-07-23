@@ -26,16 +26,17 @@ class TestCommand extends Command
      */
     public function handle()
     {
-
         LogbookRequest::with('profile')
             ->whereNull('status')
-            ->get()
-            ->each(function (LogbookRequest $request) {
-                Log::info($request->chasisNumber);
-                if ($request->profile) {
-                    $request->update([
-                        'status' => $request->profile->status,
-                    ]);
+            ->chunkById(500, function ($requests) {
+                foreach ($requests as $request) {
+                    if (!$request->profile) {
+                        continue;
+                    }
+                    Log::info('Updated Chasis: ' . $request->profile->chasisNumber);
+
+                    $request->status = $request->profile->status;
+                    $request->save();
                 }
             });
 
