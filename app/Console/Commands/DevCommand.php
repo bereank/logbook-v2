@@ -22,16 +22,17 @@ class DevCommand extends Command
     {
 
 
-    //   $logbookInfo = (new GetChasisInfoAction('MBX0005GFTC618197'))->handle();
+    //   $logbookInfo = (new GetChasisInfoAction('MD625AF71T1A00247'))->handle();
 
     //   dd($logbookInfo);
     
 
-        // $user = Auth::loginUsingId(12);
+        $user = Auth::loginUsingId(12);
 
         $logbookWithoutTransferFee = LogbookProfile::where('LogBookFee', '<=', 0)
             ->whereDate('createdOn','>=', now()->subMonths(8))
             ->whereDate('DocDate','>=', now()->subMonths(8))
+            ->whereNotNull('regNumber')
             ->whereIn('status', [LogBookStatusEnum::PENDING_ACCEPTANCE, LogBookStatusEnum::PENDING])
             ->get();
 
