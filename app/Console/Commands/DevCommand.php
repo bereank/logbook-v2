@@ -31,6 +31,7 @@ class DevCommand extends Command
 
         $logbookWithoutTransferFee = LogbookProfile::where('LogBookFee', '<=', 0)
             ->whereDate('createdOn','>=', now()->subMonths(8))
+            ->whereDate('DocDate','>=', now()->subMonths(8))
             ->whereIn('status', [LogBookStatusEnum::PENDING_ACCEPTANCE, LogBookStatusEnum::PENDING])
             ->get();
 
