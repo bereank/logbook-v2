@@ -20,12 +20,17 @@ class DevCommand extends Command
     public function handle()
     {
 
+
+      $logbookInfo = (new GetChasisInfoAction('MBX0005GFTC618197'))->handle();
+
+      dd($logbookInfo);
     
 
         $user = Auth::loginUsingId(12);
 
         $logbookWithoutTransferFee = LogbookProfile::where('LogBookFee', '<=', 0)
             // ->where('CreatedOn','>=', now()->subMonths(8))
+            ->where('chasisNumber','MD625AF73L1AR4406')
             ->get();
 
 
@@ -42,6 +47,7 @@ class DevCommand extends Command
                 'LogBookFee' => $logbookInfo['LogBookFee'],
             ]);
 
+            dd($logbook->chasisNumber . ' updated with LogBookFee: ' . $logbookInfo['LogBookFee']);
             $this->comment('Updated: ' . $logbook->chasisNumber);
         
 
