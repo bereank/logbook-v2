@@ -43,6 +43,8 @@ class DevCommand extends Command
                 continue;
             }
 
+            $this->info('Updating: ' . $logbook->chasisNumber . ' with LogBookFee: ' . $logbookInfo['LogBookFee']);
+
             $logbook->update([
                 'LogBookFee' => $logbookInfo['LogBookFee'],
             ]);
