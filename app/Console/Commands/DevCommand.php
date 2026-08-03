@@ -30,7 +30,7 @@ class DevCommand extends Command
 
         $logbookWithoutTransferFee = LogbookProfile::where('LogBookFee', '<=', 0)
             // ->where('CreatedOn','>=', now()->subMonths(8))
-            ->where('chasisNumber','MD625AF73L1AR4406')
+            ->where('chasisNumber','MBX0005GFTC618197')
             ->get();
 
 
@@ -42,8 +42,7 @@ class DevCommand extends Command
                 $this->info('No info for: ' . $logbook->chasisNumber);
                 continue;
             }
-
-            $this->info('Updating: ' . $logbook->chasisNumber . ' with LogBookFee: ' . $logbookInfo['LogBookFee']);
+            
 
             $logbook->update([
                 'LogBookFee' => $logbookInfo['LogBookFee'],
