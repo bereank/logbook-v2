@@ -21,12 +21,12 @@ class DevCommand extends Command
     {
 
 
-      $logbookInfo = (new GetChasisInfoAction('MBX0005GFTC618197'))->handle();
+    //   $logbookInfo = (new GetChasisInfoAction('MBX0005GFTC618197'))->handle();
 
-      dd($logbookInfo);
+    //   dd($logbookInfo);
     
 
-        $user = Auth::loginUsingId(12);
+        // $user = Auth::loginUsingId(12);
 
         $logbookWithoutTransferFee = LogbookProfile::where('LogBookFee', '<=', 0)
             // ->where('CreatedOn','>=', now()->subMonths(8))
