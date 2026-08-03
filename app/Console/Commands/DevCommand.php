@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Actions\LogbookActions\GetChasisInfoAction;
+use App\Enums\LogBookStatusEnum;
 use App\Models\LogbookProfile;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
@@ -30,6 +31,7 @@ class DevCommand extends Command
 
         $logbookWithoutTransferFee = LogbookProfile::where('LogBookFee', '<=', 0)
             ->whereDate('createdOn','>=', now()->subMonths(8))
+            ->whereIn('status', [LogBookStatusEnum::PENDING_ACCEPTANCE, LogBookStatusEnum::PENDING])
             ->get();
 
 
@@ -47,8 +49,8 @@ class DevCommand extends Command
                 'LogBookFee' => $logbookInfo['LogBookFee'],
             ]);
 
-            dd($logbook->chasisNumber . ' updated with LogBookFee: ' . $logbookInfo['LogBookFee']);
-            $this->comment('Updated: ' . $logbook->chasisNumber);
+            $this->comment($logbook->chasisNumber . ' updated with LogBookFee: ' . $logbookInfo['LogBookFee']);
+       
         
 
         }
