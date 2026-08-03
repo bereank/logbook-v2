@@ -34,6 +34,7 @@ class DevCommand extends Command
             ->whereIn('status', [LogBookStatusEnum::PENDING_ACCEPTANCE, LogBookStatusEnum::PENDING])
             ->get();
 
+        $this->info('Found ' . $logbookWithoutTransferFee->count() . ' logbooks without transfer fee.');
 
         foreach ($logbookWithoutTransferFee as $key => $logbook) {
 
