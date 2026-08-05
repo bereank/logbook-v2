@@ -15,6 +15,7 @@ class UpdateLogbookFeeAction
     public function handle()
     {
 
+        
         $logbook = $this->logbookProfile;
 
         $logbookInfo = (new GetChasisInfoAction($logbook->chasisNumber))->handle();

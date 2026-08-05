@@ -171,28 +171,7 @@ class LogbookInfo extends Page
                 ->action('save')
                 ->requiresConfirmation(false),
 
-            Action::make('update_logbook_fee')
-                ->label('Update Logbook Fee')
-                ->visible(function () {
-                    return $this->record->LogBookFee <= 0 && in_array($this->record->status, [LogBookStatusEnum::PENDING_ACCEPTANCE, LogBookStatusEnum::PENDING]);
-                })
-                ->action(function () {
-                    $logbookProfile = LogbookProfile::find($this->record->id);
-                    $result = (new UpdateLogbookFeeAction($logbookProfile))->handle();
-
-                    if ($result) {
-                        Notification::make()
-                            ->success()
-                            ->title('Logbook Fee updated successfully.')
-                            ->send();
-                    } else {
-                        Notification::make()
-                            ->warning()
-                            ->title('No logbook fee information found for this chasis number.')
-                            ->send();
-                    }
-                })
-                ->requiresConfirmation(false),
+       
         ];
     }
 
