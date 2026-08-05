@@ -27,7 +27,7 @@ class DevCommand extends Command
     // dd($logbookInfo);
     
 
-        $user = Auth::loginUsingId(12);
+        $user = Auth::loginUsingId(79);
 
         $logbookWithoutTransferFee = LogbookProfile::
             whereDate('createdOn','>=', now()->subMonths(8))
