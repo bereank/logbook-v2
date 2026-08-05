@@ -34,7 +34,8 @@ class DevCommand extends Command
             // ->whereDate('DocDate','>=', now()->subMonths(8))
             ->where('LogBookFee', '=', 0)
             ->whereNotNull('regNumber')
-            // ->whereIn('status', [LogBookStatusEnum::PENDING_ACCEPTANCE, LogBookStatusEnum::PENDING])
+            ->whereNotNull('CardCode')
+            ->whereIn('status', [LogBookStatusEnum::PENDING_ACCEPTANCE, LogBookStatusEnum::PENDING])
             ->get();
 
         
