@@ -30,14 +30,11 @@ class DevCommand extends Command
         $user = Auth::loginUsingId(12);
 
         $logbookWithoutTransferFee = LogbookProfile::where('LogBookFee', '<=', 0)
-            ->whereDate('DocDate', '>=', now()->subMonths(8))
+            ->whereDate('createdOn','>=', now()->subMonths(8))
             // ->whereDate('DocDate','>=', now()->subMonths(8))
             ->whereNotNull('regNumber')
             ->whereIn('status', [LogBookStatusEnum::PENDING_ACCEPTANCE, LogBookStatusEnum::PENDING])
             ->get();
-
-      
-
 
         $this->info('Found ' . $logbookWithoutTransferFee->count() . ' logbooks without transfer fee.');
 
