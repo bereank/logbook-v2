@@ -27,12 +27,12 @@ class DevCommand extends Command
     // dd($logbookInfo);
     
 
-        // $user = Auth::loginUsingId(12);
+        $user = Auth::loginUsingId(12);
 
         $logbookWithoutTransferFee = LogbookProfile::
             whereDate('createdOn','>=', now()->subMonths(8))
             // ->whereDate('DocDate','>=', now()->subMonths(8))
-        
+            ->where('LogBookFee', '<=', 0)
             ->whereNotNull('regNumber')
             // ->whereIn('status', [LogBookStatusEnum::PENDING_ACCEPTANCE, LogBookStatusEnum::PENDING])
             ->get();
