@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\LogbookProfiles\Pages;
 
+use App\Actions\LogbookActions\HelperActions\UpdateLogbookFeeAction;
 use App\Enums\LogBookStatusEnum;
 use App\Filament\Resources\LogbookProfiles\LogbookProfileResource;
 use App\Models\Logbook;
@@ -79,17 +80,17 @@ class LogbookInfo extends Page
                 Section::make('Logbook Profile')
                     ->schema([
                         TextInput::make('ChasisNumber')
-                            ->readOnly(! $this->canEdit)
+                            ->readOnly(!$this->canEdit)
                             ->label('Chasis Number')
                             ->required(),
 
                         TextInput::make('RegNumber')
-                            ->readOnly(! $this->canEdit)
+                            ->readOnly(!$this->canEdit)
                             ->label('Reg Number')
                             ->required(),
 
                         TextInput::make('LogBookFee')
-                            ->readOnly(! $this->canEdit)
+                            ->readOnly(!$this->canEdit)
                             ->label('Logbook Fee')
                             ->required(),
                     ])->columns(3),
@@ -101,17 +102,17 @@ class LogbookInfo extends Page
                             ->schema([
                                 TextInput::make('name1')
                                     ->label('Name')
-                                    ->readOnly(! $this->canEdit)
+                                    ->readOnly(!$this->canEdit)
                                     ->required(),
 
                                 TextInput::make('tel1')
                                     ->label('Phone Number 1')
-                                    ->readOnly(! $this->canEdit)
+                                    ->readOnly(!$this->canEdit)
                                     ->required(),
 
                                 TextInput::make('tel2')
                                     ->label('Phone Number 2')
-                                    ->readOnly(! $this->canEdit)
+                                    ->readOnly(!$this->canEdit)
                                     ->rules([
                                         'regex:/^\+\d{12}$/',
                                         'different:tel1',
@@ -120,7 +121,7 @@ class LogbookInfo extends Page
 
                                 TextInput::make('PinNo1')
                                     ->label('KRA Pin No 1')
-                                    ->readOnly(! $this->canEdit)
+                                    ->readOnly(!$this->canEdit)
                                     ->rules([
                                         'string',
                                         'regex:/^[A-Za-z]\d{9}[A-Za-z]$/',
@@ -129,7 +130,7 @@ class LogbookInfo extends Page
 
                                 TextInput::make('email')
                                     ->label('Email')
-                                    ->readOnly(! $this->canEdit)
+                                    ->readOnly(!$this->canEdit)
                                     ->rules([
                                         'string',
                                         'regex:/^[A-Za-z]\d{9}[A-Za-z]$/',
@@ -143,15 +144,15 @@ class LogbookInfo extends Page
                         Section::make('Other Owners Details')
                             ->schema([
                                 TextInput::make('name2')
-                                    ->readOnly(! $this->canEdit)
+                                    ->readOnly(!$this->canEdit)
                                     ->label('Name'),
 
                                 TextInput::make('PinNo2')
-                                    ->readOnly(! $this->canEdit)
+                                    ->readOnly(!$this->canEdit)
                                     ->label('KRA Pin No 2'),
 
                                 TextInput::make('PinNo3')
-                                    ->readOnly(! $this->canEdit)
+                                    ->readOnly(!$this->canEdit)
                                     ->label('PIN Number 3'),
 
                             ])->columns(3),
@@ -169,6 +170,8 @@ class LogbookInfo extends Page
                 ->visible($this->canEdit)
                 ->action('save')
                 ->requiresConfirmation(false),
+
+       
         ];
     }
 

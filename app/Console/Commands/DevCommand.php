@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Actions\LogbookActions\GetChasisInfoAction;
+use App\Enums\LogBookStatusEnum;
 use App\Models\LogbookProfile;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
@@ -20,15 +21,27 @@ class DevCommand extends Command
     public function handle()
     {
 
+
+    //  $logbookInfo = (new GetChasisInfoAction('MBX0005GFTC618148'))->handle();
+
+    // dd($logbookInfo);
     
 
-        $user = Auth::loginUsingId(12);
+        $user = Auth::loginUsingId(79);
 
-        $logbookWithoutTransferFee = LogbookProfile::where('LogBookFee', '<=', 0)
-            ->where('created_at', '>', now()->subMonths(6))
+        $logbookWithoutTransferFee = LogbookProfile::
+            whereDate('createdOn','>=', now()->subMonths(8))
+            // ->whereDate('DocDate','>=', now()->subMonths(8))
+            ->where('LogBookFee', '=', 0)
+            ->whereNotNull('regNumber')
+            ->whereNotNull('CardCode')
+            ->whereIn('status', [LogBookStatusEnum::PENDING_ACCEPTANCE, LogBookStatusEnum::PENDING])
             ->get();
 
+        
+        $this->info('Found ' . $logbookWithoutTransferFee->count() . ' logbooks without transfer fee.');
 
+      
         foreach ($logbookWithoutTransferFee as $key => $logbook) {
 
             $logbookInfo = (new GetChasisInfoAction($logbook->chasisNumber))->handle();
@@ -37,12 +50,14 @@ class DevCommand extends Command
                 $this->info('No info for: ' . $logbook->chasisNumber);
                 continue;
             }
+            
 
             $logbook->update([
                 'LogBookFee' => $logbookInfo['LogBookFee'],
             ]);
 
-            $this->comment('Updated: ' . $logbook->chasisNumber);
+            $this->comment($logbook->chasisNumber . ' updated with LogBookFee: ' . $logbookInfo['LogBookFee']);
+       
         
 
         }

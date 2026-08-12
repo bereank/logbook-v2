@@ -2,9 +2,12 @@
 
 namespace App\Filament\Resources\LogbookProfiles\Tables;
 
+use App\Actions\LogbookActions\HelperActions\UpdateLogbookFeeAction;
 use App\Enums\LogBookStatusEnum;
 use App\Filament\Resources\LogbookProfiles\LogbookProfileResource;
+use App\Models\LogbookProfile;
 use Filament\Actions\Action;
+use Filament\Notifications\Notification;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -116,6 +119,27 @@ class LogbookProfilesTable
                     ->visible(fn($record) => (int) $record->status == LogBookStatusEnum::PENDING->value && $record->regNumber)
                     ->url(fn($record) => LogbookProfileResource::getUrl('info', ['record' => $record]))
                     ->icon('heroicon-m-paper-airplane'),
+
+                Action::make('update_logbook_fee')
+                    ->label('Update Logbook Fee')
+                    ->visible(
+                        fn(LogbookProfile $record) =>
+                        $record->LogBookFee <= 0
+                     
+                        && auth()->user()->hasRole('SuperAdmin')
+                    )
+                    ->action(function (LogbookProfile $record) {
+                        $result = (new UpdateLogbookFeeAction($record))->handle();
+
+                        Notification::make()
+                                    ->title(
+                                        $result
+                                        ? 'Logbook Fee updated successfully.'
+                                        : 'No logbook fee information found for this chassis number.'
+                                    )
+                            ->{$result ? 'success' : 'warning'}()
+                                ->send();
+                    })
             ])
             ->toolbarActions([]);
     }
