@@ -105,6 +105,11 @@ class LogbookProfile extends Model
         return $this->belongsTo(User::class, 'Location', 'location');
     }
 
+     public function logbook(): BelongsTo
+    {
+        return $this->belongsTo(Logbook::class, 'chasisNumber', 'chasisNumber');
+    }
+
     public function logbookOwner(): BelongsTo
     {
         return $this->belongsTo(User::class, 'PinNo', 'pin_no');

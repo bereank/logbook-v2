@@ -22,43 +22,32 @@ class DevCommand extends Command
     {
 
 
-    //  $logbookInfo = (new GetChasisInfoAction('MBX0005GFTC618148'))->handle();
 
-    // dd($logbookInfo);
-    
+
+
 
         $user = Auth::loginUsingId(79);
 
-        $logbookWithoutTransferFee = LogbookProfile::
-            whereDate('createdOn','>=', now()->subMonths(8))
-            // ->whereDate('DocDate','>=', now()->subMonths(8))
-            ->where('LogBookFee', '=', 0)
-            ->whereNotNull('regNumber')
+        $logbookWithoutTransferFee = LogbookProfile::with('logbook')
+            ->whereHas('logbook', function ($query) {
+                $query->whereNotNull('regNumber');
+            })
+            ->whereDate('createdOn', '>=', now()->subMonths(1))
+            ->whereNull('regNumber')
             ->whereNotNull('CardCode')
             ->whereIn('status', [LogBookStatusEnum::PENDING_ACCEPTANCE, LogBookStatusEnum::PENDING])
             ->get();
 
-        
+
         $this->info('Found ' . $logbookWithoutTransferFee->count() . ' logbooks without transfer fee.');
 
-      
-        foreach ($logbookWithoutTransferFee as $key => $logbook) {
 
-            $logbookInfo = (new GetChasisInfoAction($logbook->chasisNumber))->handle();
+        foreach ($logbookWithoutTransferFee as $key => $lb) {
 
-            if (!$logbookInfo) {
-                $this->info('No info for: ' . $logbook->chasisNumber);
-                continue;
-            }
-            
-
-            $logbook->update([
-                'LogBookFee' => $logbookInfo['LogBookFee'],
+            $lb->update([
+                'regNumber' => $lb->logbook?->regNumber,
             ]);
 
-            $this->comment($logbook->chasisNumber . ' updated with LogBookFee: ' . $logbookInfo['LogBookFee']);
-       
-        
 
         }
 
