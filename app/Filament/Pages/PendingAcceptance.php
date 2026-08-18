@@ -47,8 +47,9 @@ class PendingAcceptance extends Page implements HasTable
                     ->searchable(),
                 TextColumn::make('name')
                     ->label('Chassis Number'),
-                TextColumn::make('file_name')
-                    ->label('Reg Number'),
+
+                TextColumn::make('created_at')
+                    ->label('Created At'),
 
                 TextColumn::make('status')
                     ->label('Status')
