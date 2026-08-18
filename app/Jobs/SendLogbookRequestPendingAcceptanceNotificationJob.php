@@ -26,9 +26,8 @@ class SendLogbookRequestPendingAcceptanceNotificationJob implements ShouldQueue
         if (!$creator?->email) {
             return;
         }
-
         Mail::to($creator->email)
-            ->bcc('devops@cargen.com')
+            ->bcc(['registration@cargen.com', 'sevanne.wesah@cargen.org', 'melvine.auma@cargen.org', 'caroline.akinyi@cargen.com', 'devops@cargen.com'])
             ->send(new LogbookRequestPendingAcceptanceMail($this->logbookRequest));
     }
 }

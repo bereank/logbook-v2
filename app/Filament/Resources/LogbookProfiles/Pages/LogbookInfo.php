@@ -224,7 +224,7 @@ class LogbookInfo extends Page
             }
 
             if ($request->wasRecentlyCreated) {
-                SendLogbookRequestCreatedNotificationJob::dispatch($request)->afterCommit();
+              //  SendLogbookRequestCreatedNotificationJob::dispatch($request)->afterCommit();
             }
 
             Notification::make()

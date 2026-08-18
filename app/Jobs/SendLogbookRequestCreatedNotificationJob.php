@@ -17,6 +17,7 @@ class SendLogbookRequestCreatedNotificationJob implements ShouldQueue
 
     public function __construct(public LogbookRequest $logbookRequest)
     {
+        $this->logbookRequest = $logbookRequest;
     }
 
     public function handle(): void
@@ -33,8 +34,8 @@ class SendLogbookRequestCreatedNotificationJob implements ShouldQueue
         //     return;
         // }
 
-        Mail::to(['registration@cargen.com', 'sevanne.wesah@cargen.org', 'melvine.auma@cargen.org', 'caroline.akinyi@cargen.com'])
-            ->bcc(['devops@cargen.org'])
-            ->send(new LogbookRequestCreatedMail($this->logbookRequest));
+        // Mail::to(['registration@cargen.com', 'sevanne.wesah@cargen.org', 'melvine.auma@cargen.org', 'caroline.akinyi@cargen.com'])
+        //     ->bcc(['devops@cargen.org'])
+        //     ->send(new LogbookRequestCreatedMail($this->logbookRequest));
     }
 }

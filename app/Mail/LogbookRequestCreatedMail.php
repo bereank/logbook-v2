@@ -15,6 +15,7 @@ class LogbookRequestCreatedMail extends Mailable
 
     public function __construct(public LogbookRequest $logbookRequest)
     {
+        $this->logbookRequest = $logbookRequest;
     }
 
     public function envelope(): Envelope
