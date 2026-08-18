@@ -7,6 +7,8 @@ use App\Actions\LogbookActions\GetChasisStockDataAction;
 use App\Actions\LogbookActions\SyncChasisSalesDataAction;
 use App\Enums\LogBookStatusEnum;
 use App\Enums\UploadProcessTypeEnum;
+use App\Jobs\BulkUploads\ProcessLogbookPendingAcceptanceImportJob;
+use App\Jobs\SendLogbookRequestCreatedNotificationJob;
 use App\Models\LogbookProfile;
 use App\Models\LogbookRequest;
 use App\Models\UploadProcessLog;
@@ -26,6 +28,23 @@ class TestCommand extends Command
      */
     public function handle()
     {
+
+    $logbookRequest = LogbookRequest::where('id', '62365')->first();
+
+
+
+    SendLogbookRequestCreatedNotificationJob::dispatch($logbookRequest);
+
+    dd("Done");
+
+      
+
+
+        $uploadProcessLog = UploadProcessLog::findOrFail(3259);
+
+        (new ProcessLogbookPendingAcceptanceImportJob($uploadProcessLog))->handle();
+
+        dd("Done");
         LogbookRequest::with('profile')
             ->whereNull('status')
             ->chunkById(500, function ($requests) {

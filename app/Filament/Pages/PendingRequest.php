@@ -71,7 +71,7 @@ class PendingRequest extends Page implements HasTable
 
             ])
             ->bulkActions([
-                DeleteBulkAction::make(),
+               
             ]);
     }
 

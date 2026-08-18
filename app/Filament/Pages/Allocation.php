@@ -74,7 +74,7 @@ class Allocation extends Page implements HasTable
 
             ])
             ->bulkActions([
-                DeleteBulkAction::make(),
+                
             ]);
     }
 
