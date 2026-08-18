@@ -33,7 +33,7 @@ class TestCommand extends Command
             ->map(fn (string $email) => trim($email))
             ->filter(fn (string $email) => filter_var($email, FILTER_VALIDATE_EMAIL))
             ->values()
-            ->all();
+            ->toArray();
 
         dd($recipients);
           $logbookRequest = LogbookRequest::where('id', '62419')->first();

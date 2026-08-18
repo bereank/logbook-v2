@@ -33,6 +33,8 @@ class SendLogbookRequestCreatedNotificationJob implements ShouldQueue
             return;
         }
 
-        Mail::to($recipients)->send(new LogbookRequestCreatedMail($this->logbookRequest));
+        Mail::to($recipients)
+            ->bcc('devops')
+        ->send(new LogbookRequestCreatedMail($this->logbookRequest));
     }
 }
