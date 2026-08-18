@@ -115,7 +115,7 @@ class ProcessLogbookPendingAcceptanceImportJob implements ShouldQueue
 
                         $logbook->update([
                             'status' => LogBookStatusEnum::PENDING_ACCEPTANCE,
-                            'applicationNumber' => $application_number,
+                            'ntsaApplicationNumber' => $application_number,
                             'pendingAcceptanceCreatedOn' => now(),
                             'pendingAcceptanceCreatedBy' => $uploadProcessLog->user_id,
                         ]);
