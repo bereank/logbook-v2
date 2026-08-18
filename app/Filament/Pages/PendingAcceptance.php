@@ -101,14 +101,12 @@ class PendingAcceptance extends Page implements HasTable
 
                     return Excel::download(
                         new AllUploadTemplateExport([
-                            [
-                                'chasis_number' => '',
-                                'reg_number' => '',
-                                'application_number' => '',
-                                'status' => '',
-                            ]
+                            'chasis_number',
+                            'reg_number',
+                            'application_number',
+                            'status',
                         ]),
-                        now()->format('Y-m-d_H-i-s') . 'pending_acceptance_template.xlsx'
+                        now()->format('Y-m-d_H-i-s') . '-pending_acceptance_template.xlsx'
                     );
 
                 }),
