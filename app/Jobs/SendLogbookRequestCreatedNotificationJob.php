@@ -27,6 +27,8 @@ class SendLogbookRequestCreatedNotificationJob implements ShouldQueue
             ->values()
             ->all();
 
+        dd($recipients);
+
         if ($recipients === []) {
             return;
         }
