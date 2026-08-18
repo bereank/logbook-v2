@@ -29,13 +29,7 @@ class TestCommand extends Command
     public function handle()
     {
 
-        $recipients = collect(explode(',', (string) config('services.logbook_request_notification.recipients')))
-            ->map(fn (string $email) => trim($email))
-            ->filter(fn (string $email) => filter_var($email, FILTER_VALIDATE_EMAIL))
-            ->values()
-            ->toArray();
-
-        dd($recipients);
+      
           $logbookRequest = LogbookRequest::where('id', '62419')->first();
 
 
