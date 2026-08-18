@@ -75,7 +75,6 @@ class PendingAcceptance extends Page implements HasTable
             ->actions([
                 Action::make('download')
                     ->icon('heroicon-o-arrow-down-tray')
-                    ->label('Download File')
                     ->url(fn($record) => Storage::disk('s3')->temporaryUrl(
                         $record->file_name,
                         now()->addMinutes(5),
