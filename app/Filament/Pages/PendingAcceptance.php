@@ -141,7 +141,7 @@ class PendingAcceptance extends Page implements HasTable
                             'createdBy' => auth()->id(),
                         ]);
 
-                        (new ProcessLogbookPendingAcceptanceImportJob($pendingAcceptanceUpload))->dispatch();
+                        ProcessLogbookPendingAcceptanceImportJob::dispatch($pendingAcceptanceUpload)->afterCommit();
 
                         Notification::make()
                             ->title('Upload started successfully')
@@ -149,7 +149,7 @@ class PendingAcceptance extends Page implements HasTable
                             ->send();
 
                     } catch (\Throwable $th) {
-                        Log::info('Error uploading file: ' . $th->getMessage());
+                        Log::info('Error uploading file: ' . $th);
                         Notification::make()
                             ->title('Failed to start upload process')
                             ->danger()

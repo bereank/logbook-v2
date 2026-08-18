@@ -180,7 +180,7 @@ class Acceptance extends Page implements HasTable
     {
         return UploadProcessLog::query()
             ->where('process_type', UploadProcessTypeEnum::ACCEPTED->value)
-            ->where('name', 'Acceptance Successfull');
+            ->OrWhere('name', 'Acceptance Successfull');
     }
 
     public static function canAccess(): bool
