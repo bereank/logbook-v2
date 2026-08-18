@@ -41,4 +41,8 @@ return [
         'bridge_password' => env('BRIDGE_PASSWORD'),
     ],
 
+    'logbook_request_notification' => [
+        'recipients' => env('LOGBOOK_REQUEST_NOTIFICATION_RECIPIENTS', ''),
+    ],
+
 ];

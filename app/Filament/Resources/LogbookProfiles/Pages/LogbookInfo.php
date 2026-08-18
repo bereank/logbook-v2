@@ -5,6 +5,7 @@ namespace App\Filament\Resources\LogbookProfiles\Pages;
 use App\Actions\LogbookActions\HelperActions\UpdateLogbookFeeAction;
 use App\Enums\LogBookStatusEnum;
 use App\Filament\Resources\LogbookProfiles\LogbookProfileResource;
+use App\Jobs\SendLogbookRequestCreatedNotificationJob;
 use App\Models\Logbook;
 use App\Models\LogbookProfile;
 use App\Models\LogbookRequest;
@@ -220,6 +221,10 @@ class LogbookInfo extends Page
                 $request->update([
                     'is_instant_transfer' => true,
                 ]);
+            }
+
+            if ($request->wasRecentlyCreated) {
+                SendLogbookRequestCreatedNotificationJob::dispatch($request)->afterCommit();
             }
 
             Notification::make()

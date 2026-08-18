@@ -3,6 +3,7 @@
 namespace App\Filament\Pages;
 
 use App\Enums\UploadProcessTypeEnum;
+use App\Exports\TemplateExports\AllUploadTemplateExport;
 use App\Exports\TemplateExports\LogbooksPendingRequestTemplateExport;
 use App\Models\UploadProcessLog;
 use BackedEnum;
@@ -17,6 +18,7 @@ use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 use UnitEnum;
 
@@ -37,6 +39,8 @@ class PendingAcceptance extends Page implements HasTable
         return $table
             ->query($this->getBaseQuery()) // your model here
             ->columns([
+                     TextColumn::make('id')
+                    ->label('#'),
                 TextColumn::make('creator.name')
                     ->label('Requested By')
                     ->searchable(),
@@ -48,17 +52,17 @@ class PendingAcceptance extends Page implements HasTable
                 TextColumn::make('status')
                     ->label('Status')
                     ->badge()
-                    ->icon(fn (string $state): string => match ($state) {
-                        '0' => 'heroicon-m-x-mark',
+                    ->icon(fn(string $state): string => match ($state) {
+                        '0' => 'heroicon-m-arrow-path',
                         '1' => 'heroicon-m-check',
 
                     })
-                    ->formatStateUsing(fn (string $state): mixed => match ($state) {
+                    ->formatStateUsing(fn(string $state): mixed => match ($state) {
                         '0' => 'Processing',
                         '1' => 'Processed',
                     })
-                    ->color(fn (string $state): string => match ($state) {
-                        '0' => 'danger',
+                    ->color(fn(string $state): string => match ($state) {
+                        '0' => 'info',
                         '1' => 'success',
                     }),
 
@@ -68,10 +72,20 @@ class PendingAcceptance extends Page implements HasTable
 
             ])
             ->actions([
-
+                Action::make('download')
+                    ->icon('heroicon-o-arrow-down-tray')
+                    ->label('Download File')
+                    ->url(fn($record) => Storage::disk('s3')->temporaryUrl(
+                        $record->file_name,
+                        now()->addMinutes(5),
+                        [
+                            'ResponseContentDisposition' => 'attachment; filename="' . basename($record->file) . '"',
+                        ]
+                    ))
+                    ->openUrlInNewTab(),
             ])
             ->bulkActions([
-                DeleteBulkAction::make(),
+
             ]);
     }
 
@@ -86,14 +100,15 @@ class PendingAcceptance extends Page implements HasTable
                 ->action(function () {
 
                     return Excel::download(
-                        new LogbooksPendingRequestTemplateExport([
+                        new AllUploadTemplateExport([
                             [
                                 'chasis_number' => '',
                                 'reg_number' => '',
+                                'application_number' => '',
                                 'status' => '',
-                            ],
+                            ]
                         ]),
-                        'Direct Transfer Template.xlsx'
+                        now()->format('Y-m-d_H-i-s') . 'pending_acceptance_template.xlsx'
                     );
 
                 }),
@@ -118,10 +133,10 @@ class PendingAcceptance extends Page implements HasTable
 
                     try {
                         $data = UploadProcessLog::create([
-                            'name' => 'Pending Acceptance',
+                            'name' => 'Pending Acceptance Upload',
                             'file_name' => $filePath,
                             'user_id' => auth()->id(),
-                            'status' => 1, // Processing
+                            'status' => 0, // Processing
                             'createdOn' => now(),
                             'process_type' => UploadProcessTypeEnum::PENDING_ACCEPTANCE->value,
                             'createdBy' => auth()->id(),
@@ -133,7 +148,7 @@ class PendingAcceptance extends Page implements HasTable
                             ->send();
 
                     } catch (\Throwable $th) {
-                        Log::info('Error uploading file: '.$th->getMessage());
+                        Log::info('Error uploading file: ' . $th->getMessage());
                         Notification::make()
                             ->title('Failed to start upload process')
                             ->danger()
@@ -150,7 +165,8 @@ class PendingAcceptance extends Page implements HasTable
     protected function getBaseQuery()
     {
         return UploadProcessLog::query()
-            ->where('process_type', UploadProcessTypeEnum::PENDING_ACCEPTANCE->value);
+            ->where('process_type', UploadProcessTypeEnum::PENDING_ACCEPTANCE->value)
+            ->orWhere('name', 'Pending Acceptance Upload');
     }
 
     public static function canAccess(): bool
