@@ -5,6 +5,7 @@ namespace App\Filament\Pages;
 use App\Enums\UploadProcessTypeEnum;
 use App\Exports\TemplateExports\AllUploadTemplateExport;
 use App\Exports\TemplateExports\LogbooksPendingRequestTemplateExport;
+use App\Jobs\BulkUploads\ProcessLogbookPendingAcceptanceImportJob;
 use App\Models\UploadProcessLog;
 use BackedEnum;
 use Filament\Actions\Action;
@@ -39,7 +40,7 @@ class PendingAcceptance extends Page implements HasTable
         return $table
             ->query($this->getBaseQuery()) // your model here
             ->columns([
-                     TextColumn::make('id')
+                TextColumn::make('id')
                     ->label('#'),
                 TextColumn::make('creator.name')
                     ->label('Requested By')
@@ -132,7 +133,7 @@ class PendingAcceptance extends Page implements HasTable
                     $filePath = $data['file'];
 
                     try {
-                        $data = UploadProcessLog::create([
+                        $pendingAcceptanceUpload = UploadProcessLog::create([
                             'name' => 'Pending Acceptance Upload',
                             'file_name' => $filePath,
                             'user_id' => auth()->id(),
@@ -141,6 +142,8 @@ class PendingAcceptance extends Page implements HasTable
                             'process_type' => UploadProcessTypeEnum::PENDING_ACCEPTANCE->value,
                             'createdBy' => auth()->id(),
                         ]);
+
+                        (new ProcessLogbookPendingAcceptanceImportJob($pendingAcceptanceUpload))->dispatch();
 
                         Notification::make()
                             ->title('Upload started successfully')
