@@ -28,9 +28,13 @@ class TestCommand extends Command
      */
     public function handle()
     {
-        $uploadProcessLog = UploadProcessLog::findOrFail(3290);
+          $logbookRequest = LogbookRequest::where('id', '62419')->first();
 
-        (new ProcessLogbookPendingAcceptanceImportJob($uploadProcessLog))->handle();
+
+
+        SendLogbookRequestCreatedNotificationJob::dispatch($logbookRequest);
+
+        dd("Done");
 
         dd("Done");
 
@@ -44,14 +48,7 @@ class TestCommand extends Command
 
         dd("Done");
 
-        $logbookRequest = LogbookRequest::where('id', '62365')->first();
-
-
-
-        SendLogbookRequestCreatedNotificationJob::dispatch($logbookRequest);
-
-        dd("Done");
-
+      
 
 
 
