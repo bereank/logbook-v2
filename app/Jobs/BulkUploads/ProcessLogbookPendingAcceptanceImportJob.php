@@ -4,6 +4,7 @@ namespace App\Jobs\BulkUploads;
 
 use App\Enums\LogBookStatusEnum;
 use App\Imports\BulkTaskImports;
+use App\Jobs\SendLogbookRequestPendingAcceptanceNotificationJob;
 use App\Models\Logbook;
 use App\Models\LogbookProfile;
 use App\Models\LogbookRequest;
@@ -120,11 +121,16 @@ class ProcessLogbookPendingAcceptanceImportJob implements ShouldQueue
                         ]);
 
 
-                        LogbookRequest::where('chasisNumber', $chasisNumber)
-                            ->update([
+                        $logbookRequest = LogbookRequest::where('chasisNumber', $chasisNumber)->first();
+
+                        if ($logbookRequest && $logbookRequest->status !== LogBookStatusEnum::PENDING_ACCEPTANCE->value) {
+                            $logbookRequest->update([
                                 'status' => LogBookStatusEnum::PENDING_ACCEPTANCE,
                                 'assign_to' => $uploadProcessLog->user_id,
                             ]);
+
+                            SendLogbookRequestPendingAcceptanceNotificationJob::dispatch($logbookRequest)->afterCommit();
+                        }
 
                         $successfuluploads = UploadedDataLog::create([
                             'name' => 'Pending Acceptance Upload',
